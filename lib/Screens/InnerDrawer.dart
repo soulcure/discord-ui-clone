@@ -18,13 +18,6 @@ enum InnerDrawerDirection {
   end,
 }
 
-/// Animation type of a [InnerDrawer].
-enum InnerDrawerAnimation {
-  static,
-  linear,
-  quadratic,
-}
-
 //width before initState
 const double _kWidth = 400;
 const double _kMinFlingVelocity = 365.0;
@@ -37,8 +30,6 @@ class InnerDrawer extends StatefulWidget {
       this.leftChild,
       this.rightChild,
       this.scaffold,
-      this.offset = const IDOffset.horizontal(0.4),
-      this.scale = const IDOffset.horizontal(1),
       this.proportionalChildArea = true,
       this.borderRadius = 0,
       this.onTapClose = false,
@@ -50,8 +41,6 @@ class InnerDrawer extends StatefulWidget {
       this.boxShadow,
       this.colorTransitionChild,
       this.colorTransitionScaffold,
-      this.leftAnimationType = InnerDrawerAnimation.static,
-      this.rightAnimationType = InnerDrawerAnimation.static,
       this.backgroundDecoration,
       this.innerDrawerCallback,
       this.onDragUpdate})
@@ -66,13 +55,6 @@ class InnerDrawer extends StatefulWidget {
 
   /// A Scaffold is generally used but you are free to use other widgets
   final Widget scaffold;
-
-  /// When the [InnerDrawer] is open, it's possible to set the offset of each of the four cardinal directions
-  final IDOffset offset;
-
-  /// When the [InnerDrawer] is open to the left or to the right
-  /// values between 1 and 0. (default 1)
-  final IDOffset scale;
 
   /// The proportionalChild Area = true dynamically sets the width based on the selected offset.
   /// On false it leaves the width at 100% of the screen
@@ -107,12 +89,6 @@ class InnerDrawer extends StatefulWidget {
 
   ///Color of gradient background
   final Color colorTransitionScaffold;
-
-  /// Static or Linear or Quadratic
-  final InnerDrawerAnimation leftAnimationType;
-
-  /// Static or Linear or Quadratic
-  final InnerDrawerAnimation rightAnimationType;
 
   /// Color of the main background
   final Decoration backgroundDecoration;
@@ -260,9 +236,7 @@ class InnerDrawerState extends State<InnerDrawer>
     else if (delta < 0 && _controller.value == 1 && _rightChild != null)
       _position = InnerDrawerDirection.end;
 
-    double offset = _position == InnerDrawerDirection.start
-        ? widget.offset.left
-        : widget.offset.right;
+    double offset = 0.8;
 
     double ee = 1;
     if (offset <= 0.2)
@@ -367,39 +341,11 @@ class InnerDrawerState extends State<InnerDrawer>
     return null;
   }
 
-  /// returns the left or right animation type based on InnerDrawerDirection
-  InnerDrawerAnimation get _animationType {
-    return _position == InnerDrawerDirection.start
-        ? widget.leftAnimationType
-        : widget.rightAnimationType;
-  }
-
-  /// returns the left or right scale based on InnerDrawerDirection
-  double get _scaleFactor {
-    return _position == InnerDrawerDirection.start
-        ? widget.scale.left
-        : widget.scale.right;
-  }
-
-  /// returns the left or right offset based on InnerDrawerDirection
-  double get _offset {
-    return _position == InnerDrawerDirection.start
-        ? widget.offset.left
-        : widget.offset.right;
-  }
-
   /// return width with specific offset
   double get _widthWithOffset {
-    return (_width / 2) - (_width / 2) * _offset;
+    return (_width / 2) - (_width / 2) * 0.8;
     //NEW
     //return _width  - _width * _offset;
-  }
-
-  /// return swipe
-  bool get _swipe {
-    //NEW
-    //if( _offset == 0 ) return false;
-    return widget.swipe;
   }
 
   /// return swipeChild
@@ -418,7 +364,7 @@ class InnerDrawerState extends State<InnerDrawer>
     final Widget scaffoldChild = Stack(
       children: <Widget>[widget.scaffold, invC != null ? invC : null]
           .where((a) => a != null)
-          .toList() as List<Widget>,
+          .toList(),
     );
 
     Widget container = Container(
@@ -439,25 +385,6 @@ class InnerDrawerState extends State<InnerDrawer>
                     (1 - _controller.value) * widget.borderRadius),
                 child: scaffoldChild)
             : scaffoldChild);
-
-    if (_scaleFactor < 1)
-      container = Transform.scale(
-        alignment: _drawerInnerAlignment,
-        scale: ((1 - _scaleFactor) * _controller.value) + _scaleFactor,
-        child: container,
-      );
-
-    // Vertical translate
-    if (widget.offset != null &&
-        (widget.offset.top > 0 || widget.offset.bottom > 0)) {
-      final double translateY = MediaQuery.of(context).size.height *
-          (widget.offset.top > 0 ? -widget.offset.top : widget.offset.bottom);
-      container = Transform.translate(
-        offset: Offset(0, translateY * (1 - _controller.value)),
-        child: container,
-      );
-    }
-
     return container;
   }
 
@@ -471,7 +398,6 @@ class InnerDrawerState extends State<InnerDrawer>
         child: GestureDetector(
           // On Android, the back button is used to dismiss a modal.
           excludeFromSemantics: defaultTargetPlatform == TargetPlatform.android,
-          onTap: widget.onTapClose || !_swipe ? close : null,
           child: Semantics(
             label: MaterialLocalizations.of(context).modalBarrierDismissLabel,
             child: container,
@@ -519,9 +445,7 @@ class InnerDrawerState extends State<InnerDrawer>
       dragAreaWidth = drawerIsStart ? padding.right : padding.left;
     dragAreaWidth = max(dragAreaWidth, _kEdgeDragWidth);
 
-    if (_controller.status == AnimationStatus.completed &&
-        _swipe &&
-        child != null)
+    if (_controller.status == AnimationStatus.completed && child != null)
       return Align(
         alignment: alignment,
         child: Container(color: Colors.transparent, width: dragAreaWidth),
@@ -542,7 +466,7 @@ class InnerDrawerState extends State<InnerDrawer>
     }
 
     /// wFactor depends of offset and is used by the second Align that contains the Scaffold
-    final double offset = 0.5 - _offset * 0.5;
+    final double offset = 0.5 - 0.8 * 0.5;
     //NEW
     //final double offset = 1 - _offset * 1;
     final double wFactor = (_controller.value * (1 - offset)) + offset;
@@ -555,7 +479,7 @@ class InnerDrawerState extends State<InnerDrawer>
       child: Stack(
         alignment: _drawerInnerAlignment,
         children: <Widget>[
-          FocusScope(node: _focusScopeNode, child: _animatedChild()),
+          _animatedChild(),
           GestureDetector(
             key: _gestureDetectorKey,
             onTap: () {},
@@ -565,14 +489,6 @@ class InnerDrawerState extends State<InnerDrawer>
             excludeFromSemantics: true,
             child: Stack(
               children: <Widget>[
-                ///Gradient
-                Container(
-                  width: _controller.value == 0 ||
-                          _animationType == InnerDrawerAnimation.linear
-                      ? 0
-                      : null,
-                  color: _colorTransitionChild.evaluate(_controller),
-                ),
                 Align(
                   alignment: _drawerOuterAlignment,
                   child: Align(
@@ -584,7 +500,7 @@ class InnerDrawerState extends State<InnerDrawer>
                 ///Trigger
                 _trigger(AlignmentDirectional.centerStart, _leftChild),
                 _trigger(AlignmentDirectional.centerEnd, _rightChild),
-              ].where((a) => a != null).toList() as List<Widget>,
+              ].where((a) => a != null).toList(),
             ),
           ),
         ],

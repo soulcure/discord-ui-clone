@@ -6,7 +6,6 @@ class DrawerNotifier extends ChangeNotifier {
   bool onTapToClose = false;
   bool swipe = true;
   bool tapScaffold = true;
-  InnerDrawerAnimation animationType = InnerDrawerAnimation.static;
   double offset = 0.4;
   Color colorTransition = Colors.black54;
 
@@ -29,11 +28,6 @@ class DrawerNotifier extends ChangeNotifier {
 
   void setOnTapToClose(bool c) {
     onTapToClose = c;
-    notifyListeners();
-  }
-
-  void setAnimationType(InnerDrawerAnimation t) {
-    animationType = t;
     notifyListeners();
   }
 

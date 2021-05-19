@@ -23,7 +23,6 @@ class _ExampleTwoState extends State<ExampleTwo> {
   bool _onTapToClose = false;
   bool _swipe = true;
   bool _tapScaffold = true;
-  InnerDrawerAnimation _animationType = InnerDrawerAnimation.static;
   bool _proportionalChildArea = true;
   double _horizontalOffset = 0.4;
   double _verticalOffset = 0.4;
@@ -67,20 +66,12 @@ class _ExampleTwoState extends State<ExampleTwo> {
     return InnerDrawer(
       key: _innerDrawerKey,
       onTapClose: true,
-      offset: IDOffset.only(
-          top: _topBottom ? _verticalOffset : 0.0,
-          bottom: !_topBottom ? _verticalOffset : 0.0,
-          right: _horizontalOffset,
-          left: _horizontalOffset),
-      scale: IDOffset.horizontal(_scale),
       borderRadius: _borderRadius,
       duration: Duration(milliseconds: 11200),
       swipe: _swipe,
       proportionalChildArea: _proportionalChildArea,
       //backgroundColor: Colors.red,
       colorTransitionChild: currentColor,
-      leftAnimationType: _animationType,
-      rightAnimationType: _animationType,
       leftChild: Material(
           color: Theme.of(context).backgroundColor,
           child: Center(
@@ -130,19 +121,13 @@ class _ExampleTwoState extends State<ExampleTwo> {
                           Text('Static'),
                           Checkbox(
                               activeColor: Colors.black,
-                              value:
-                                  _animationType == InnerDrawerAnimation.static,
                               onChanged: (a) {
-                                setState(() {
-                                  _animationType = InnerDrawerAnimation.static;
-                                });
+                                setState(() {});
                               }),
                         ],
                       ),
                       onTap: () {
-                        setState(() {
-                          _animationType = InnerDrawerAnimation.static;
-                        });
+                        setState(() {});
                       },
                     ),
                     GestureDetector(
@@ -151,20 +136,14 @@ class _ExampleTwoState extends State<ExampleTwo> {
                         children: <Widget>[
                           Checkbox(
                               activeColor: Colors.black,
-                              value:
-                                  _animationType == InnerDrawerAnimation.linear,
                               onChanged: (a) {
-                                setState(() {
-                                  _animationType = InnerDrawerAnimation.linear;
-                                });
+                                setState(() {});
                               }),
                           Text('Linear'),
                         ],
                       ),
                       onTap: () {
-                        setState(() {
-                          _animationType = InnerDrawerAnimation.linear;
-                        });
+                        setState(() {});
                       },
                     ),
                     GestureDetector(
@@ -173,21 +152,14 @@ class _ExampleTwoState extends State<ExampleTwo> {
                         children: <Widget>[
                           Checkbox(
                               activeColor: Colors.black,
-                              value: _animationType ==
-                                  InnerDrawerAnimation.quadratic,
                               onChanged: (a) {
-                                setState(() {
-                                  _animationType =
-                                      InnerDrawerAnimation.quadratic;
-                                });
+                                setState(() {});
                               }),
                           Text('Quadratic'),
                         ],
                       ),
                       onTap: () {
-                        setState(() {
-                          _animationType = InnerDrawerAnimation.quadratic;
-                        });
+                        setState(() {});
                       },
                     ),
                   ],

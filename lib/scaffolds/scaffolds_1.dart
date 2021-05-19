@@ -52,68 +52,6 @@ class ScaffoldDrawer extends StatelessWidget {
                     "Animation Type",
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      GestureDetector(
-                        child: Row(
-                          children: <Widget>[
-                            Text('Static'),
-                            Checkbox(
-                                activeColor: Colors.black,
-                                value: drawer.animationType ==
-                                    InnerDrawerAnimation.static,
-                                onChanged: (a) {
-                                  drawer.setAnimationType(
-                                      InnerDrawerAnimation.static);
-                                }),
-                          ],
-                        ),
-                        onTap: () {
-                          drawer.setAnimationType(InnerDrawerAnimation.static);
-                        },
-                      ),
-                      GestureDetector(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Checkbox(
-                                activeColor: Colors.black,
-                                value: drawer.animationType ==
-                                    InnerDrawerAnimation.linear,
-                                onChanged: (a) {
-                                  drawer.setAnimationType(
-                                      InnerDrawerAnimation.linear);
-                                }),
-                            Text('Linear'),
-                          ],
-                        ),
-                        onTap: () {
-                          drawer.setAnimationType(InnerDrawerAnimation.linear);
-                        },
-                      ),
-                      GestureDetector(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Checkbox(
-                                activeColor: Colors.black,
-                                value: drawer.animationType ==
-                                    InnerDrawerAnimation.quadratic,
-                                onChanged: (a) {
-                                  drawer.setAnimationType(
-                                      InnerDrawerAnimation.quadratic);
-                                }),
-                            Text('Quadratic'),
-                          ],
-                        ),
-                        onTap: () {
-                          drawer
-                              .setAnimationType(InnerDrawerAnimation.quadratic);
-                        },
-                      ),
-                    ],
-                  ),
                   Padding(
                     padding: EdgeInsets.all(10),
                   ),
