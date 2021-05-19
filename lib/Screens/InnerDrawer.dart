@@ -165,15 +165,6 @@ class InnerDrawerState extends State<InnerDrawer>
     setState(() {
       // The animation controller's state is our build state, and it changed already.
     });
-    if (widget.colorTransitionChild != null)
-      _colorTransitionChild = ColorTween(
-          begin: widget.colorTransitionChild.withOpacity(0.0),
-          end: widget.colorTransitionChild);
-
-    if (widget.colorTransitionScaffold != null)
-      _colorTransitionScaffold = ColorTween(
-          begin: widget.colorTransitionScaffold,
-          end: widget.colorTransitionScaffold.withOpacity(0.0));
 
     if (widget.onDragUpdate != null && _controller.value < 1) {
       widget.onDragUpdate((1 - _controller.value), _position);
@@ -514,23 +505,7 @@ class InnerDrawerState extends State<InnerDrawer>
       height: MediaQuery.of(context).size.height,
       child: child,
     );
-
-    switch (_animationType) {
-      case InnerDrawerAnimation.linear:
-        return Align(
-          alignment: _drawerOuterAlignment,
-          widthFactor: 1 - (_controller.value),
-          child: container,
-        );
-      case InnerDrawerAnimation.quadratic:
-        return Align(
-          alignment: _drawerOuterAlignment,
-          widthFactor: 1 - (_controller.value / 2),
-          child: container,
-        );
-      default:
-        return container;
-    }
+    return container;
   }
 
   /// Trigger Area
@@ -584,34 +559,32 @@ class InnerDrawerState extends State<InnerDrawer>
           GestureDetector(
             key: _gestureDetectorKey,
             onTap: () {},
-            onHorizontalDragDown: _swipe ? _handleDragDown : null,
-            onHorizontalDragUpdate: _swipe ? _move : null,
-            onHorizontalDragEnd: _swipe ? _settle : null,
+            onHorizontalDragDown: _handleDragDown,
+            onHorizontalDragUpdate: _move,
+            onHorizontalDragEnd: _settle,
             excludeFromSemantics: true,
-            child: RepaintBoundary(
-              child: Stack(
-                children: <Widget>[
-                  ///Gradient
-                  Container(
-                    width: _controller.value == 0 ||
-                            _animationType == InnerDrawerAnimation.linear
-                        ? 0
-                        : null,
-                    color: _colorTransitionChild.evaluate(_controller),
-                  ),
-                  Align(
-                    alignment: _drawerOuterAlignment,
-                    child: Align(
-                        alignment: _drawerInnerAlignment,
-                        widthFactor: wFactor,
-                        child: RepaintBoundary(child: _scaffold())),
-                  ),
+            child: Stack(
+              children: <Widget>[
+                ///Gradient
+                Container(
+                  width: _controller.value == 0 ||
+                          _animationType == InnerDrawerAnimation.linear
+                      ? 0
+                      : null,
+                  color: _colorTransitionChild.evaluate(_controller),
+                ),
+                Align(
+                  alignment: _drawerOuterAlignment,
+                  child: Align(
+                      alignment: _drawerInnerAlignment,
+                      widthFactor: wFactor,
+                      child: _scaffold()),
+                ),
 
-                  ///Trigger
-                  _trigger(AlignmentDirectional.centerStart, _leftChild),
-                  _trigger(AlignmentDirectional.centerEnd, _rightChild),
-                ].where((a) => a != null).toList() as List<Widget>,
-              ),
+                ///Trigger
+                _trigger(AlignmentDirectional.centerStart, _leftChild),
+                _trigger(AlignmentDirectional.centerEnd, _rightChild),
+              ].where((a) => a != null).toList() as List<Widget>,
             ),
           ),
         ],
