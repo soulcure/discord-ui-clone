@@ -16,6 +16,11 @@ gen/
 out/
 .dart_tool/
 .idea/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+lib/generated_plugin_registrant.dart
+
 #  Uncomment the following line in case you need and you don't have the release build type files in your app
 # release/
 
@@ -85,3 +90,4 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
