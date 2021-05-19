@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.10.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -36,6 +36,10 @@ dependencies:
   path:
   video_player: ^1.0.1
   socket_io_client: ^0.9.12
+
+  flutter_colorpicker: ^0.3.2
+  provider: ^4.3.1
+
 
 dev_dependencies:
   flutter_test:
