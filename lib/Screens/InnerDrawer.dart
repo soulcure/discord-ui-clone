@@ -83,9 +83,10 @@ class InnerDrawerState extends State<InnerDrawer>
         : InnerDrawerDirection.end;
 
     _controller = AnimationController(
-        value: 1, duration: _kBaseSettleDuration, vsync: this)
+        value: -_offset, duration: _kBaseSettleDuration, vsync: this)
       ..addListener(_animationChanged)
       ..addStatusListener(_animationStatusChanged);
+
     super.initState();
   }
 
@@ -94,6 +95,45 @@ class InnerDrawerState extends State<InnerDrawer>
     _controller.dispose();
     _focusScopeNode.dispose();
     super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    /// initialize the correct width
+    if (_initWidth == 400 ||
+        MediaQuery.of(context).orientation != _orientation) {
+      _updateWidth();
+      _orientation = MediaQuery.of(context).orientation;
+    }
+
+    /// wFactor depends of offset and is used by the second Align that contains the Scaffold
+    final double offset = 0.5 - _offset * 0.5;
+    //NEW
+    //final double offset = 1 - _offset * 1;
+    final double wFactor = (_controller.value * (1 - offset)) + offset;
+
+    return Container(
+      child: Stack(
+        alignment: _drawerInnerAlignment,
+        children: <Widget>[
+          _animatedChild(),
+          GestureDetector(
+            key: _key,
+            onHorizontalDragDown: _handleDragDown,
+            onHorizontalDragUpdate: _move,
+            onHorizontalDragEnd: _settle,
+            excludeFromSemantics: true, //语义树中排除一些手势
+            child: Align(
+              alignment: _drawerOuterAlignment,
+              child: Align(
+                  alignment: _drawerInnerAlignment,
+                  widthFactor: wFactor,
+                  child: _scaffold),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _animationChanged() {
@@ -283,46 +323,6 @@ class InnerDrawerState extends State<InnerDrawer>
       child: child,
     );
     return container;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    /// initialize the correct width
-    if (_initWidth == 400 ||
-        MediaQuery.of(context).orientation != _orientation) {
-      _updateWidth();
-      _orientation = MediaQuery.of(context).orientation;
-    }
-
-    /// wFactor depends of offset and is used by the second Align that contains the Scaffold
-    final double offset = 0.5 - _offset * 0.5;
-    //NEW
-    //final double offset = 1 - _offset * 1;
-    final double wFactor = (_controller.value * (1 - offset)) + offset;
-    print("wFactor=$wFactor");
-
-    return Container(
-      child: Stack(
-        alignment: _drawerInnerAlignment,
-        children: <Widget>[
-          _animatedChild(),
-          GestureDetector(
-            key: _key,
-            onHorizontalDragDown: _handleDragDown,
-            onHorizontalDragUpdate: _move,
-            onHorizontalDragEnd: _settle,
-            excludeFromSemantics: true, //语义树中排除一些手势
-            child: Align(
-              alignment: _drawerOuterAlignment,
-              child: Align(
-                  alignment: _drawerInnerAlignment,
-                  widthFactor: wFactor,
-                  child: _scaffold),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
 
