@@ -299,29 +299,18 @@ class InnerDrawerState extends State<InnerDrawer>
 
   /// Scaffold
   Widget get _scaffold {
-    return Container(
-        child: ClipRRect(
-            borderRadius: BorderRadius.circular(10), child: widget.scaffold));
+    return widget.scaffold;
   }
 
   Widget get _leftChild {
-    Container child = Container(
-        margin: EdgeInsets.only(right: 50),
-        child: ClipRRect(
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(10),
-                bottomRight: Radius.circular(10)),
-            child: widget.leftChild));
+    Container child =
+        Container(padding: EdgeInsets.only(right: 50), child: widget.leftChild);
     return child;
   }
 
   Widget get _rightChild {
-    Container child = Container(
-        margin: EdgeInsets.only(left: 50),
-        child: ClipRRect(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
-            child: widget.rightChild));
+    Container child =
+        Container(padding: EdgeInsets.only(left: 50), child: widget.rightChild);
     return child;
   }
 
