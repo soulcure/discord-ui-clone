@@ -9,17 +9,12 @@ import 'children/right_child_1.dart';
 import 'scaffolds/scaffolds_1.dart';
 
 class ExampleOne extends StatelessWidget {
-  final GlobalKey<InnerDrawerState> _innerDrawerKey =
-      GlobalKey<InnerDrawerState>();
-
-  Color pickerColor = Color(0xff443a49);
-  Color currentColor = Colors.black54;
-  ValueChanged<Color> onColorChanged;
+  final _key = GlobalKey<InnerDrawerState>();
 
   @override
   Widget build(BuildContext context) {
     return InnerDrawer(
-      key: _innerDrawerKey,
+      key: _key,
       onTapClose: context.select((DrawerNotifier value) => value.onTapToClose),
       tapScaffoldEnabled:
           context.select((DrawerNotifier value) => value.tapScaffold),
@@ -27,16 +22,9 @@ class ExampleOne extends StatelessWidget {
 
       leftChild: LeftChild(),
 
-      rightChild: RightChild(innerDrawerKey: _innerDrawerKey),
+      rightChild: RightChild(innerDrawerKey: _key),
 
-      scaffold: ScaffoldDrawer(innerDrawerKey: _innerDrawerKey),
-
-      onDragUpdate: (double value, InnerDrawerDirection direction) {
-        //BAD: DO NOT DO THIS, take it as a general example.
-        // We working to find a solution.
-        //drawerNotifier.setSwipeOffset(value);
-        context.read<DrawerNotifier>().setSwipeOffset(value);
-      },
+      scaffold: ScaffoldDrawer(innerDrawerKey: _key),
       //innerDrawerCallback: (a) => print(a),
     );
   }

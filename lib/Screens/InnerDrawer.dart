@@ -31,8 +31,7 @@ class InnerDrawer extends StatefulWidget {
       this.onTapClose = false,
       this.tapScaffoldEnabled = false,
       this.velocity = 20,
-      this.innerDrawerCallback,
-      this.onDragUpdate})
+      this.innerDrawerCallback})
       : assert(leftChild != null || rightChild != null),
         super(key: key);
 
@@ -56,9 +55,6 @@ class InnerDrawer extends StatefulWidget {
 
   /// Optional callback that is called when a [InnerDrawer] is open or closed.
   final InnerDrawerCallback innerDrawerCallback;
-
-  /// when a pointer that is in contact with the screen and moves to the right or left
-  final InnerDragUpdateCallback onDragUpdate;
 
   @override
   InnerDrawerState createState() => InnerDrawerState();
@@ -140,10 +136,6 @@ class InnerDrawerState extends State<InnerDrawer>
     setState(() {
       // The animation controller's state is our build state, and it changed already.
     });
-
-    if (widget.onDragUpdate != null && _controller.value < 1) {
-      widget.onDragUpdate((1 - _controller.value), _position);
-    }
   }
 
   void _animationStatusChanged(AnimationStatus status) {
