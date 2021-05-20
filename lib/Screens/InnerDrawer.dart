@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 /// Signature for the callback that's called when a [InnerDrawer] is
@@ -22,7 +21,7 @@ enum InnerDrawerDirection {
 const double _kWidth = 400;
 const double _kMinFlingVelocity = 365.0;
 const double _kEdgeDragWidth = 20.0;
-const Duration _kBaseSettleDuration = Duration(milliseconds: 246);
+const Duration _kBaseSettleDuration = Duration(milliseconds: 20);
 
 class InnerDrawer extends StatefulWidget {
   const InnerDrawer(
@@ -31,16 +30,10 @@ class InnerDrawer extends StatefulWidget {
       this.rightChild,
       this.scaffold,
       this.proportionalChildArea = true,
-      this.borderRadius = 0,
       this.onTapClose = false,
       this.tapScaffoldEnabled = false,
-      this.swipe = true,
       this.swipeChild = false,
-      this.duration,
-      this.velocity = 1,
-      this.boxShadow,
-      this.colorTransitionChild,
-      this.colorTransitionScaffold,
+      this.velocity = 20,
       this.backgroundDecoration,
       this.innerDrawerCallback,
       this.onDragUpdate})
@@ -60,35 +53,17 @@ class InnerDrawer extends StatefulWidget {
   /// On false it leaves the width at 100% of the screen
   final bool proportionalChildArea;
 
-  /// edge radius when opening the scaffold - (defalut 0)
-  final double borderRadius;
-
   /// Closes the open scaffold
   final bool tapScaffoldEnabled;
 
   /// Closes the open scaffold
   final bool onTapClose;
 
-  /// activate or deactivate the swipe. NOTE: when deactivate, onTap Close is implicitly activated
-  final bool swipe;
-
   /// activate or deactivate the swipeChild. NOTE: when deactivate, onTap Close is implicitly activated
   final bool swipeChild;
 
-  /// duration animation controller
-  final Duration duration;
-
   /// possibility to set the opening and closing velocity
   final double velocity;
-
-  /// BoxShadow of scaffold open
-  final List<BoxShadow> boxShadow;
-
-  ///Color of gradient background
-  final Color colorTransitionChild;
-
-  ///Color of gradient background
-  final Color colorTransitionScaffold;
 
   /// Color of the main background
   final Decoration backgroundDecoration;
@@ -105,14 +80,14 @@ class InnerDrawer extends StatefulWidget {
 
 class InnerDrawerState extends State<InnerDrawer>
     with SingleTickerProviderStateMixin {
-  ColorTween _colorTransitionChild =
-      ColorTween(begin: Colors.transparent, end: Colors.black54);
-  ColorTween _colorTransitionScaffold =
-      ColorTween(begin: Colors.black54, end: Colors.transparent);
-
   double _initWidth = _kWidth;
   Orientation _orientation = Orientation.portrait;
   InnerDrawerDirection _position;
+  AnimationController _controller;
+  final FocusScopeNode _focusScopeNode = FocusScopeNode();
+  final GlobalKey _drawerKey = GlobalKey();
+  bool _previouslyOpened = false;
+  final GlobalKey _gestureDetectorKey = GlobalKey();
 
   @override
   void initState() {
@@ -121,9 +96,7 @@ class InnerDrawerState extends State<InnerDrawer>
         : InnerDrawerDirection.end;
 
     _controller = AnimationController(
-        value: 1,
-        duration: widget.duration ?? _kBaseSettleDuration,
-        vsync: this)
+        value: 1, duration: _kBaseSettleDuration, vsync: this)
       ..addListener(_animationChanged)
       ..addStatusListener(_animationStatusChanged);
     super.initState();
@@ -131,7 +104,6 @@ class InnerDrawerState extends State<InnerDrawer>
 
   @override
   void dispose() {
-    _historyEntry?.remove();
     _controller.dispose();
     _focusScopeNode.dispose();
     super.dispose();
@@ -144,20 +116,6 @@ class InnerDrawerState extends State<InnerDrawer>
 
     if (widget.onDragUpdate != null && _controller.value < 1) {
       widget.onDragUpdate((1 - _controller.value), _position);
-    }
-  }
-
-  LocalHistoryEntry _historyEntry;
-  final FocusScopeNode _focusScopeNode = FocusScopeNode();
-
-  void _ensureHistoryEntry() {
-    if (_historyEntry == null) {
-      final ModalRoute<dynamic> route = ModalRoute.of(context);
-      if (route != null) {
-        _historyEntry = LocalHistoryEntry(onRemove: _handleHistoryEntryRemoved);
-        route.addLocalHistoryEntry(_historyEntry);
-        FocusScope.of(context).setFirstFocus(_focusScopeNode);
-      }
     }
   }
 
@@ -175,7 +133,6 @@ class InnerDrawerState extends State<InnerDrawer>
           if (widget.innerDrawerCallback != null)
             widget.innerDrawerCallback(opened);
         }
-        _ensureHistoryEntry();
         break;
       case AnimationStatus.completed:
         if (_previouslyOpened != opened) {
@@ -183,24 +140,12 @@ class InnerDrawerState extends State<InnerDrawer>
           if (widget.innerDrawerCallback != null)
             widget.innerDrawerCallback(opened);
         }
-        _historyEntry?.remove();
-        _historyEntry = null;
     }
   }
 
-  void _handleHistoryEntryRemoved() {
-    _historyEntry = null;
-    close();
-  }
-
-  AnimationController _controller;
-
   void _handleDragDown(DragDownDetails details) {
     _controller.stop();
-    //_ensureHistoryEntry();
   }
-
-  final GlobalKey _drawerKey = GlobalKey();
 
   double get _width {
     return _initWidth;
@@ -226,8 +171,6 @@ class InnerDrawerState extends State<InnerDrawer>
     });
   }
 
-  bool _previouslyOpened = false;
-
   void _move(DragUpdateDetails details) {
     double delta = details.primaryDelta / _width;
 
@@ -237,17 +180,6 @@ class InnerDrawerState extends State<InnerDrawer>
       _position = InnerDrawerDirection.end;
 
     double offset = 0.8;
-
-    double ee = 1;
-    if (offset <= 0.2)
-      ee = 1.7;
-    else if (offset <= 0.4)
-      ee = 1.2;
-    else if (offset <= 0.6) ee = 1.05;
-
-    offset = 1 -
-        (pow(offset / ee, 1 / 2)
-            as double); //(num.parse(pow(offset/2,1/3).toStringAsFixed(1)));
 
     switch (_position) {
       case InnerDrawerDirection.end:
@@ -317,8 +249,6 @@ class InnerDrawerState extends State<InnerDrawer>
       open(direction: direction);
   }
 
-  final GlobalKey _gestureDetectorKey = GlobalKey();
-
   /// Outer Alignment
   AlignmentDirectional get _drawerOuterAlignment {
     switch (_position) {
@@ -357,54 +287,7 @@ class InnerDrawerState extends State<InnerDrawer>
 
   /// Scaffold
   Widget _scaffold() {
-    assert(widget.borderRadius >= 0);
-
-    final Widget invC = _invisibleCover();
-
-    final Widget scaffoldChild = Stack(
-      children: <Widget>[widget.scaffold, invC != null ? invC : null]
-          .where((a) => a != null)
-          .toList(),
-    );
-
-    Widget container = Container(
-        key: _drawerKey,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(
-                widget.borderRadius * (1 - _controller.value)),
-            boxShadow: widget.boxShadow ??
-                [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.5),
-                    blurRadius: 5,
-                  )
-                ]),
-        child: widget.borderRadius != 0
-            ? ClipRRect(
-                borderRadius: BorderRadius.circular(
-                    (1 - _controller.value) * widget.borderRadius),
-                child: scaffoldChild)
-            : scaffoldChild);
-    return container;
-  }
-
-  ///Disable the scaffolding tap when the drawer is open
-  Widget _invisibleCover() {
-    final Container container = Container(
-      color: _colorTransitionScaffold.evaluate(_controller),
-    );
-    if (_controller.value != 1.0 && !widget.tapScaffoldEnabled)
-      return BlockSemantics(
-        child: GestureDetector(
-          // On Android, the back button is used to dismiss a modal.
-          excludeFromSemantics: defaultTargetPlatform == TargetPlatform.android,
-          child: Semantics(
-            label: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-            child: container,
-          ),
-        ),
-      );
-    return null;
+    return widget.scaffold;
   }
 
   Widget get _leftChild {

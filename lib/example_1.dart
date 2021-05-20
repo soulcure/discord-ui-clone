@@ -30,11 +30,6 @@ class ExampleOne extends StatelessWidget {
           context.select((DrawerNotifier value) => value.tapScaffold),
       velocity: 20,
       swipeChild: true,
-      swipe: context.select((DrawerNotifier value) => value.swipe),
-      colorTransitionChild:
-          context.select((DrawerNotifier value) => value.colorTransition),
-      colorTransitionScaffold:
-          context.select((DrawerNotifier value) => value.colorTransition),
 
       leftChild: LeftChild(),
 
