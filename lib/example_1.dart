@@ -29,7 +29,6 @@ class ExampleOne extends StatelessWidget {
       tapScaffoldEnabled:
           context.select((DrawerNotifier value) => value.tapScaffold),
       velocity: 20,
-      swipeChild: true,
 
       leftChild: LeftChild(),
 

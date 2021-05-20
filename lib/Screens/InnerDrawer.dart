@@ -32,9 +32,7 @@ class InnerDrawer extends StatefulWidget {
       this.proportionalChildArea = true,
       this.onTapClose = false,
       this.tapScaffoldEnabled = false,
-      this.swipeChild = false,
       this.velocity = 20,
-      this.backgroundDecoration,
       this.innerDrawerCallback,
       this.onDragUpdate})
       : assert(leftChild != null || rightChild != null),
@@ -59,14 +57,8 @@ class InnerDrawer extends StatefulWidget {
   /// Closes the open scaffold
   final bool onTapClose;
 
-  /// activate or deactivate the swipeChild. NOTE: when deactivate, onTap Close is implicitly activated
-  final bool swipeChild;
-
   /// possibility to set the opening and closing velocity
   final double velocity;
-
-  /// Color of the main background
-  final Decoration backgroundDecoration;
 
   /// Optional callback that is called when a [InnerDrawer] is open or closed.
   final InnerDrawerCallback innerDrawerCallback;
@@ -80,14 +72,16 @@ class InnerDrawer extends StatefulWidget {
 
 class InnerDrawerState extends State<InnerDrawer>
     with SingleTickerProviderStateMixin {
+  final GlobalKey _drawerKey = GlobalKey();
+  final GlobalKey _gestureDetectorKey = GlobalKey();
+
   double _initWidth = _kWidth;
   Orientation _orientation = Orientation.portrait;
+  final FocusScopeNode _focusScopeNode = FocusScopeNode();
+  bool _previouslyOpened = false;
+
   InnerDrawerDirection _position;
   AnimationController _controller;
-  final FocusScopeNode _focusScopeNode = FocusScopeNode();
-  final GlobalKey _drawerKey = GlobalKey();
-  bool _previouslyOpened = false;
-  final GlobalKey _gestureDetectorKey = GlobalKey();
 
   @override
   void initState() {
@@ -278,15 +272,8 @@ class InnerDrawerState extends State<InnerDrawer>
     //return _width  - _width * _offset;
   }
 
-  /// return swipeChild
-  bool get _swipeChild {
-    //NEW
-    //if( _offset == 0 ) return false;
-    return widget.swipeChild;
-  }
-
   /// Scaffold
-  Widget _scaffold() {
+  Widget get _scaffold {
     return widget.scaffold;
   }
 
@@ -302,13 +289,7 @@ class InnerDrawerState extends State<InnerDrawer>
   Widget _animatedChild() {
     Widget child =
         _position == InnerDrawerDirection.start ? _leftChild : _rightChild;
-    if (_swipeChild) {
-      child = GestureDetector(
-        onHorizontalDragUpdate: _move,
-        onHorizontalDragEnd: _settle,
-        child: child,
-      );
-    }
+
     final Widget container = Container(
       width: widget.proportionalChildArea ? _width - _widthWithOffset : _width,
       height: MediaQuery.of(context).size.height,
@@ -339,8 +320,6 @@ class InnerDrawerState extends State<InnerDrawer>
 
   @override
   Widget build(BuildContext context) {
-    //assert(debugCheckHasMaterialLocalizations(context));
-
     /// initialize the correct width
     if (_initWidth == 400 ||
         MediaQuery.of(context).orientation != _orientation) {
@@ -355,17 +334,12 @@ class InnerDrawerState extends State<InnerDrawer>
     final double wFactor = (_controller.value * (1 - offset)) + offset;
 
     return Container(
-      decoration: widget.backgroundDecoration ??
-          BoxDecoration(
-            color: Theme.of(context).backgroundColor,
-          ),
       child: Stack(
         alignment: _drawerInnerAlignment,
         children: <Widget>[
           _animatedChild(),
           GestureDetector(
             key: _gestureDetectorKey,
-            onTap: () {},
             onHorizontalDragDown: _handleDragDown,
             onHorizontalDragUpdate: _move,
             onHorizontalDragEnd: _settle,
@@ -377,7 +351,7 @@ class InnerDrawerState extends State<InnerDrawer>
                   child: Align(
                       alignment: _drawerInnerAlignment,
                       widthFactor: wFactor,
-                      child: _scaffold()),
+                      child: _scaffold),
                 ),
 
                 ///Trigger
