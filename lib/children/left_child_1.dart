@@ -9,7 +9,6 @@ class LeftChild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("build left");
-
     final double swipeOffset =
         context.select((DrawerNotifier value) => value.swipeOffset);
     return Material(
@@ -148,18 +147,6 @@ class LeftChild extends StatelessWidget {
             ],
           ),
         ),
-        swipeOffset < 1
-            ? BackdropFilter(
-                filter: ImageFilter.blur(
-                    sigmaX: (10 - swipeOffset * 10),
-                    sigmaY: (10 - swipeOffset * 10)),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0),
-                  ),
-                ),
-              )
-            : null,
       ].where((a) => a != null).toList(),
     ));
   }
