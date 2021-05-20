@@ -305,11 +305,24 @@ class InnerDrawerState extends State<InnerDrawer>
   }
 
   Widget get _leftChild {
-    return widget.leftChild;
+    Container child = Container(
+        margin: EdgeInsets.only(right: 50),
+        child: ClipRRect(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(10),
+                bottomRight: Radius.circular(10)),
+            child: widget.leftChild));
+    return child;
   }
 
   Widget get _rightChild {
-    return widget.rightChild;
+    Container child = Container(
+        margin: EdgeInsets.only(left: 50),
+        child: ClipRRect(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
+            child: widget.rightChild));
+    return child;
   }
 
   /// return widget with specific animation

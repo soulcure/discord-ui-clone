@@ -12,17 +12,12 @@ class ExampleOne extends StatelessWidget {
   final GlobalKey<InnerDrawerState> _innerDrawerKey =
       GlobalKey<InnerDrawerState>();
 
-  String _title = "One";
-
   Color pickerColor = Color(0xff443a49);
   Color currentColor = Colors.black54;
   ValueChanged<Color> onColorChanged;
 
   @override
   Widget build(BuildContext context) {
-    print("example 1");
-    //final drawerNotifier = Provider.of<DrawerNotifier>(context, listen: true);
-
     return InnerDrawer(
       key: _innerDrawerKey,
       onTapClose: context.select((DrawerNotifier value) => value.onTapToClose),
