@@ -299,6 +299,7 @@ class InnerDrawerState extends State<InnerDrawer>
     //NEW
     //final double offset = 1 - _offset * 1;
     final double wFactor = (_controller.value * (1 - offset)) + offset;
+    print("wFactor=$wFactor");
 
     return Container(
       child: Stack(
@@ -311,16 +312,12 @@ class InnerDrawerState extends State<InnerDrawer>
             onHorizontalDragUpdate: _move,
             onHorizontalDragEnd: _settle,
             excludeFromSemantics: true, //语义树中排除一些手势
-            child: Stack(
-              children: <Widget>[
-                Align(
-                  alignment: _drawerOuterAlignment,
-                  child: Align(
-                      alignment: _drawerInnerAlignment,
-                      widthFactor: wFactor,
-                      child: _scaffold),
-                ),
-              ].where((a) => a != null).toList(),
+            child: Align(
+              alignment: _drawerOuterAlignment,
+              child: Align(
+                  alignment: _drawerInnerAlignment,
+                  widthFactor: wFactor,
+                  child: _scaffold),
             ),
           ),
         ],
