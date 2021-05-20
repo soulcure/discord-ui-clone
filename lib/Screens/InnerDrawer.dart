@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -260,11 +259,9 @@ class InnerDrawerState extends State<InnerDrawer>
 
   /// Scaffold
   Widget get _scaffold {
-    Widget container = Container(
-        key: _key, //padding
+    return Container(
         child: ClipRRect(
             borderRadius: BorderRadius.circular(10), child: widget.scaffold));
-    return container;
   }
 
   Widget get _leftChild {
