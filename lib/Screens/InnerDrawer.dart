@@ -29,7 +29,6 @@ class InnerDrawer extends StatefulWidget {
       this.leftChild,
       this.rightChild,
       this.scaffold,
-      this.proportionalChildArea = true,
       this.onTapClose = false,
       this.tapScaffoldEnabled = false,
       this.velocity = 20,
@@ -46,10 +45,6 @@ class InnerDrawer extends StatefulWidget {
 
   /// A Scaffold is generally used but you are free to use other widgets
   final Widget scaffold;
-
-  /// The proportionalChild Area = true dynamically sets the width based on the selected offset.
-  /// On false it leaves the width at 100% of the screen
-  final bool proportionalChildArea;
 
   /// Closes the open scaffold
   final bool tapScaffoldEnabled;
@@ -265,16 +260,13 @@ class InnerDrawerState extends State<InnerDrawer>
     return null;
   }
 
-  /// return width with specific offset
-  double get _widthWithOffset {
-    return (_width / 2) - (_width / 2) * 0.8;
-    //NEW
-    //return _width  - _width * _offset;
-  }
-
   /// Scaffold
   Widget get _scaffold {
-    return widget.scaffold;
+    Widget container = Container(
+        key: _drawerKey, //padding
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(10), child: widget.scaffold));
+    return container;
   }
 
   Widget get _leftChild {
@@ -291,7 +283,7 @@ class InnerDrawerState extends State<InnerDrawer>
         _position == InnerDrawerDirection.start ? _leftChild : _rightChild;
 
     final Widget container = Container(
-      width: widget.proportionalChildArea ? _width - _widthWithOffset : _width,
+      width: _width,
       height: MediaQuery.of(context).size.height,
       child: child,
     );

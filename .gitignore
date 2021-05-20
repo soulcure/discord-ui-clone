@@ -91,3 +91,4 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 
+.DS_Store
