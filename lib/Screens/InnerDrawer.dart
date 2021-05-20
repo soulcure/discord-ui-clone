@@ -20,7 +20,7 @@ enum InnerDrawerDirection {
 //width before initState
 const double _kWidth = 400;
 const double _kMinFlingVelocity = 365.0;
-const double _kEdgeDragWidth = 20.0;
+const double _offset = 0.8;
 const Duration _kBaseSettleDuration = Duration(milliseconds: 20);
 
 class InnerDrawer extends StatefulWidget {
@@ -67,8 +67,7 @@ class InnerDrawer extends StatefulWidget {
 
 class InnerDrawerState extends State<InnerDrawer>
     with SingleTickerProviderStateMixin {
-  final GlobalKey _drawerKey = GlobalKey();
-  final GlobalKey _gestureDetectorKey = GlobalKey();
+  final GlobalKey _key = GlobalKey();
 
   double _initWidth = _kWidth;
   Orientation _orientation = Orientation.portrait;
@@ -147,8 +146,7 @@ class InnerDrawerState extends State<InnerDrawer>
   /// get width of screen after initState
   void _updateWidth() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final RenderBox box =
-          _drawerKey.currentContext.findRenderObject() as RenderBox;
+      final RenderBox box = _key.currentContext.findRenderObject() as RenderBox;
       //final RenderBox box = context.findRenderObject();
       if (box != null &&
           box.hasSize &&
@@ -168,8 +166,6 @@ class InnerDrawerState extends State<InnerDrawer>
     else if (delta < 0 && _controller.value == 1 && _rightChild != null)
       _position = InnerDrawerDirection.end;
 
-    double offset = 0.8;
-
     switch (_position) {
       case InnerDrawerDirection.end:
         break;
@@ -177,18 +173,21 @@ class InnerDrawerState extends State<InnerDrawer>
         delta = -delta;
         break;
     }
+
     switch (Directionality.of(context)) {
       case TextDirection.rtl:
-        _controller.value -= delta + (delta * offset);
+        _controller.value -= delta + (delta * _offset);
         break;
       case TextDirection.ltr:
-        _controller.value += delta + (delta * offset);
+        _controller.value += delta + (delta * _offset);
         break;
     }
 
     final bool opened = _controller.value < 0.5 ? true : false;
+
     if (opened != _previouslyOpened && widget.innerDrawerCallback != null)
       widget.innerDrawerCallback(opened);
+
     _previouslyOpened = opened;
   }
 
@@ -197,7 +196,6 @@ class InnerDrawerState extends State<InnerDrawer>
     if (details.velocity.pixelsPerSecond.dx.abs() >= _kMinFlingVelocity) {
       double visualVelocity =
           (details.velocity.pixelsPerSecond.dx + _velocity) / _width;
-
       switch (_position) {
         case InnerDrawerDirection.end:
           break;
@@ -263,7 +261,7 @@ class InnerDrawerState extends State<InnerDrawer>
   /// Scaffold
   Widget get _scaffold {
     Widget container = Container(
-        key: _drawerKey, //padding
+        key: _key, //padding
         child: ClipRRect(
             borderRadius: BorderRadius.circular(10), child: widget.scaffold));
     return container;
@@ -290,26 +288,6 @@ class InnerDrawerState extends State<InnerDrawer>
     return container;
   }
 
-  /// Trigger Area
-  Widget _trigger(AlignmentDirectional alignment, Widget child) {
-    assert(alignment != null);
-    final bool drawerIsStart = _position == InnerDrawerDirection.start;
-    final EdgeInsets padding = MediaQuery.of(context).padding;
-    double dragAreaWidth = drawerIsStart ? padding.left : padding.right;
-
-    if (Directionality.of(context) == TextDirection.rtl)
-      dragAreaWidth = drawerIsStart ? padding.right : padding.left;
-    dragAreaWidth = max(dragAreaWidth, _kEdgeDragWidth);
-
-    if (_controller.status == AnimationStatus.completed && child != null)
-      return Align(
-        alignment: alignment,
-        child: Container(color: Colors.transparent, width: dragAreaWidth),
-      );
-    else
-      return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     /// initialize the correct width
@@ -320,7 +298,7 @@ class InnerDrawerState extends State<InnerDrawer>
     }
 
     /// wFactor depends of offset and is used by the second Align that contains the Scaffold
-    final double offset = 0.5 - 0.8 * 0.5;
+    final double offset = 0.5 - _offset * 0.5;
     //NEW
     //final double offset = 1 - _offset * 1;
     final double wFactor = (_controller.value * (1 - offset)) + offset;
@@ -331,11 +309,11 @@ class InnerDrawerState extends State<InnerDrawer>
         children: <Widget>[
           _animatedChild(),
           GestureDetector(
-            key: _gestureDetectorKey,
+            key: _key,
             onHorizontalDragDown: _handleDragDown,
             onHorizontalDragUpdate: _move,
             onHorizontalDragEnd: _settle,
-            excludeFromSemantics: true,
+            excludeFromSemantics: true, //语义树中排除一些手势
             child: Stack(
               children: <Widget>[
                 Align(
@@ -345,10 +323,6 @@ class InnerDrawerState extends State<InnerDrawer>
                       widthFactor: wFactor,
                       child: _scaffold),
                 ),
-
-                ///Trigger
-                _trigger(AlignmentDirectional.centerStart, _leftChild),
-                _trigger(AlignmentDirectional.centerEnd, _rightChild),
               ].where((a) => a != null).toList(),
             ),
           ),
