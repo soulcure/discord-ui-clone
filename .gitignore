@@ -92,3 +92,4 @@ lint/tmp/
 # lint/reports/
 
 .DS_Store
+lib/generated_plugin_registrant.dart
