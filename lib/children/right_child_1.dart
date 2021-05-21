@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:discord_ui_clone/Screens/InnerDrawer.dart';
 import 'package:discord_ui_clone/notifier/drawer_notifier.dart';
 import 'package:flutter/material.dart';
-import '../env.dart';
 import 'package:provider/provider.dart';
 
 class RightChild extends StatelessWidget {
@@ -111,10 +110,7 @@ class RightChild extends StatelessWidget {
                       ),
                       ListTile(
                         title: Text("Open Facebook"),
-                        leading: Icon(
-                          Env.facebook_icon,
-                          size: 18,
-                        ),
+                        leading: Icon(Icons.ac_unit),
                       ),
                       Container(
                         alignment: Alignment.bottomLeft,
