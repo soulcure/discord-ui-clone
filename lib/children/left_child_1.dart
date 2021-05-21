@@ -14,7 +14,7 @@ class LeftChild extends StatefulWidget {
 }
 
 class _LeftChildState extends State<LeftChild> {
-  GlobalKey<ScrollBottomNavigationBarState> leftKey = GlobalKey();
+  final leftKey = GlobalKey<ScrollBottomNavigationBarState>();
 
   static const _items = <BottomNavigationBarItem>[
     BottomNavigationBarItem(
