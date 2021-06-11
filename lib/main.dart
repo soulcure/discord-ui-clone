@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'example_1.dart';
+import 'Screens/InnerDrawer.dart';
+import 'children/left_child_1.dart';
+import 'children/right_child_1.dart';
 import 'notifier/drawer_notifier.dart';
+import 'scaffolds/scaffolds_1.dart';
 
 void main() => runApp(ChangeNotifierProvider(
       create: (context) => DrawerNotifier(),
@@ -9,33 +12,27 @@ void main() => runApp(ChangeNotifierProvider(
     ));
 
 class MyApp extends StatelessWidget {
+  final _key = GlobalKey<InnerDrawerState>();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Inner Drawer',
       theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
+        primarySwatch: Colors.blue,
         backgroundColor: Colors.white,
       ),
-      home: MainApp(),
+      home: Scaffold(
+          body: SafeArea(
+        // 加入SafeArea
+        child: InnerDrawer(
+          key: _key,
+          leftChild: LeftChild(innerDrawerKey: _key),
+          rightChild: RightChild(innerDrawerKey: _key),
+          scaffold: ScaffoldDrawer(innerDrawerKey: _key),
+          //innerDrawerCallback: (a) => print(a),
+        ),
+      )),
     );
-  }
-}
-
-class MainApp extends StatefulWidget {
-  MainApp({Key key}) : super(key: key);
-
-  @override
-  _MainAppState createState() => _MainAppState();
-}
-
-class _MainAppState extends State<MainApp> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-      // 加入SafeArea
-      child: ExampleOne(),
-    ));
   }
 }

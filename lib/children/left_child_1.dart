@@ -4,8 +4,11 @@ import 'package:discord_ui_clone/notifier/drawer_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../Screens/InnerDrawer.dart';
+
 class LeftChild extends StatefulWidget {
-  LeftChild({Key key}) : super(key: key);
+  final GlobalKey<InnerDrawerState> innerDrawerKey;
+  LeftChild({this.innerDrawerKey, Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -44,7 +47,6 @@ class _LeftChildState extends State<LeftChild> {
         kBottomNavigationBarHeight;
 
     return Scaffold(
-      appBar: AppBar(title: Text("Simple scroll")),
       body: Container(
         constraints: BoxConstraints(
           maxHeight: bodyHeight,
@@ -57,12 +59,12 @@ class _LeftChildState extends State<LeftChild> {
             //stops: [0.1, 0.5,0.5, 0.7, 0.9],
             colors: [
               ColorTween(
-                begin: Colors.blueAccent,
-                end: Colors.blueGrey[400].withRed(100),
+                begin: Colors.redAccent,
+                end: Colors.red[400].withRed(100),
               ).lerp(swipeOffset),
               ColorTween(
-                begin: Colors.green,
-                end: Colors.blueGrey[800].withGreen(80),
+                begin: Colors.red,
+                end: Colors.red[800].withGreen(80),
               ).lerp(swipeOffset),
             ],
           ),
