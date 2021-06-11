@@ -17,7 +17,6 @@ enum InnerDrawerDirection {
 }
 
 //width before initState
-const double _kWidth = 400;
 const double _kMinFlingVelocity = 365.0;
 const double _offset = 0.8;
 const Duration _kBaseSettleDuration = Duration(milliseconds: 20);
@@ -62,10 +61,7 @@ class InnerDrawer extends StatefulWidget {
 
 class InnerDrawerState extends State<InnerDrawer>
     with SingleTickerProviderStateMixin {
-  final GlobalKey _key = GlobalKey();
-
-  double _initWidth = _kWidth;
-  Orientation _orientation = Orientation.portrait;
+  double _initWidth = 0;
   final FocusScopeNode _focusScopeNode = FocusScopeNode();
   bool _previouslyOpened = false;
 
@@ -95,11 +91,8 @@ class InnerDrawerState extends State<InnerDrawer>
 
   @override
   Widget build(BuildContext context) {
-    /// initialize the correct width
-    if (_initWidth == 400 ||
-        MediaQuery.of(context).orientation != _orientation) {
-      _updateWidth();
-      _orientation = MediaQuery.of(context).orientation;
+    if (_initWidth == 0) {
+      _initWidth = MediaQuery.of(context).size.width;
     }
 
     /// wFactor depends of offset and is used by the second Align that contains the Scaffold
@@ -114,7 +107,6 @@ class InnerDrawerState extends State<InnerDrawer>
         children: <Widget>[
           _animatedChild(),
           GestureDetector(
-            key: _key,
             onHorizontalDragDown: _handleDragDown,
             onHorizontalDragUpdate: _move,
             onHorizontalDragEnd: _settle,
@@ -172,21 +164,6 @@ class InnerDrawerState extends State<InnerDrawer>
 
   double get _velocity {
     return widget.velocity;
-  }
-
-  /// get width of screen after initState
-  void _updateWidth() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final RenderBox box = _key.currentContext.findRenderObject() as RenderBox;
-      //final RenderBox box = context.findRenderObject();
-      if (box != null &&
-          box.hasSize &&
-          box.size != null &&
-          box.size.width > 300)
-        setState(() {
-          _initWidth = box.size.width;
-        });
-    });
   }
 
   void _move(DragUpdateDetails details) {
