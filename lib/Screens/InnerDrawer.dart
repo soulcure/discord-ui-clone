@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 
 /// Signature for the callback that's called when a [InnerDrawer] is
 /// opened or closed.
-typedef InnerDrawerCallback = void Function(bool isOpened);
+typedef InnerDrawerCallback = void Function(bool isLeft, bool isOpened);
 
 /// Signature for when a pointer that is in contact with the screen and moves to the right or left
 /// values between 1 and 0
@@ -108,8 +108,8 @@ class InnerDrawerState extends State<InnerDrawer>
           _animatedChild(),
           GestureDetector(
             onHorizontalDragDown: _handleDragDown,
-            onHorizontalDragUpdate: _move,
-            onHorizontalDragEnd: _settle,
+            onHorizontalDragUpdate: __handleDragMove,
+            onHorizontalDragEnd: _handleDragEnd,
             excludeFromSemantics: true, //语义树中排除一些手势
             child: Align(
               alignment: _drawerOuterAlignment,
@@ -139,34 +139,20 @@ class InnerDrawerState extends State<InnerDrawer>
       case AnimationStatus.forward:
         break;
       case AnimationStatus.dismissed:
-        if (_previouslyOpened != opened) {
-          _previouslyOpened = opened;
-          if (widget.innerDrawerCallback != null)
-            widget.innerDrawerCallback(opened);
-        }
         break;
       case AnimationStatus.completed:
-        if (_previouslyOpened != opened) {
-          _previouslyOpened = opened;
-          if (widget.innerDrawerCallback != null)
-            widget.innerDrawerCallback(opened);
-        }
     }
   }
 
   void _handleDragDown(DragDownDetails details) {
     _controller.stop();
+
+    if (widget.innerDrawerCallback != null)
+      widget.innerDrawerCallback(
+          (_position == InnerDrawerDirection.start ? true : false), false);
   }
 
-  double get _width {
-    return _initWidth;
-  }
-
-  double get _velocity {
-    return widget.velocity;
-  }
-
-  void _move(DragUpdateDetails details) {
+  void __handleDragMove(DragUpdateDetails details) {
     double delta = details.primaryDelta / _width;
 
     if (delta > 0 && _controller.value == 1 && _leftChild != null)
@@ -192,14 +178,10 @@ class InnerDrawerState extends State<InnerDrawer>
     }
 
     final bool opened = _controller.value < 0.5 ? true : false;
-
-    if (opened != _previouslyOpened && widget.innerDrawerCallback != null)
-      widget.innerDrawerCallback(opened);
-
     _previouslyOpened = opened;
   }
 
-  void _settle(DragEndDetails details) {
+  void _handleDragEnd(DragEndDetails details) {
     if (_controller.isDismissed) return;
     if (details.velocity.pixelsPerSecond.dx.abs() >= _kMinFlingVelocity) {
       double visualVelocity =
@@ -221,9 +203,20 @@ class InnerDrawerState extends State<InnerDrawer>
       }
     } else if (_controller.value < 0.5) {
       open();
+      if (widget.innerDrawerCallback != null)
+        widget.innerDrawerCallback(
+            (_position == InnerDrawerDirection.start ? true : false), true);
     } else {
       close();
     }
+  }
+
+  double get _width {
+    return _initWidth;
+  }
+
+  double get _velocity {
+    return widget.velocity;
   }
 
   void open({InnerDrawerDirection direction}) {
@@ -231,17 +224,19 @@ class InnerDrawerState extends State<InnerDrawer>
     _controller.fling(velocity: -_velocity);
   }
 
+  void openLeft() {
+    _position = InnerDrawerDirection.start;
+    _controller.fling(velocity: -_velocity);
+  }
+
+  void openRight() {
+    _position = InnerDrawerDirection.end;
+    _controller.fling(velocity: -_velocity);
+  }
+
   void close({InnerDrawerDirection direction}) {
     if (direction != null) _position = direction;
     _controller.fling(velocity: _velocity);
-  }
-
-  /// Open or Close InnerDrawer
-  void toggle({InnerDrawerDirection direction}) {
-    if (_previouslyOpened)
-      close(direction: direction);
-    else
-      open(direction: direction);
   }
 
   /// Outer Alignment

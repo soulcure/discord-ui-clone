@@ -43,9 +43,13 @@ class RightChild extends StatelessWidget {
                 title: Text("Suggested People"),
                 leading: Icon(Icons.person_add),
               ),
-              ListTile(
-                title: Text("Open Facebook"),
-                leading: Icon(Icons.ac_unit),
+              ElevatedButton(
+                child: Text("close"),
+                onPressed: () {
+                  // direction is optional
+                  // if not set, the last direction will be used
+                  innerDrawerKey.currentState.close();
+                },
               ),
               Container(
                 alignment: Alignment.bottomLeft,

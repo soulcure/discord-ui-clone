@@ -14,8 +14,11 @@ void main() => runApp(ChangeNotifierProvider(
 class MyApp extends StatelessWidget {
   final _key = GlobalKey<InnerDrawerState>();
 
+  LeftChild leftChild;
+
   @override
   Widget build(BuildContext context) {
+    leftChild = LeftChild(innerDrawerKey: _key);
     return MaterialApp(
       title: 'Inner Drawer',
       theme: ThemeData(
@@ -27,12 +30,21 @@ class MyApp extends StatelessWidget {
         // 加入SafeArea
         child: InnerDrawer(
           key: _key,
-          leftChild: LeftChild(innerDrawerKey: _key),
+          leftChild: leftChild,
           rightChild: RightChild(innerDrawerKey: _key),
           scaffold: ScaffoldDrawer(innerDrawerKey: _key),
-          //innerDrawerCallback: (a) => print(a),
+          innerDrawerCallback: callback,
         ),
       )),
     );
+  }
+
+  callback(left, open) {
+    print("yao drawer callback left=$left open=$open");
+    if (left && open) {
+      leftChild.show();
+    } else if (left && !open) {
+      leftChild.hide();
+    }
   }
 }

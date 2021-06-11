@@ -1,22 +1,13 @@
 import 'dart:ui';
 import 'package:discord_ui_clone/Widget/scroll_bottom_navigation_bar.dart';
-import 'package:discord_ui_clone/notifier/drawer_notifier.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../Screens/InnerDrawer.dart';
 
-class LeftChild extends StatefulWidget {
+class LeftChild extends StatelessWidget {
   final GlobalKey<InnerDrawerState> innerDrawerKey;
   LeftChild({this.innerDrawerKey, Key key}) : super(key: key);
 
-  @override
-  State<StatefulWidget> createState() {
-    return _LeftChildState();
-  }
-}
-
-class _LeftChildState extends State<LeftChild> {
   final leftKey = GlobalKey<ScrollBottomNavigationBarState>();
 
   static const _items = <BottomNavigationBarItem>[
@@ -34,41 +25,28 @@ class _LeftChildState extends State<LeftChild> {
     ),
   ];
 
+  show() {
+    leftKey.currentState.show();
+  }
+
+  hide() {
+    leftKey.currentState.hide();
+  }
+
   @override
   Widget build(BuildContext context) {
     print("build left");
-    final double swipeOffset =
-        context.select((DrawerNotifier value) => value.swipeOffset);
+    final height = MediaQuery.of(context).size.height;
 
-    final double height = MediaQuery.of(context).size.height;
-    final bodyHeight = height -
-        kMinInteractiveDimension -
-        kToolbarHeight -
-        kBottomNavigationBarHeight;
+    final top = MediaQueryData.fromWindow(window).padding.top;
+    final bodyHeight = height - top - kBottomNavigationBarHeight;
 
     return Scaffold(
       body: Container(
         constraints: BoxConstraints(
           maxHeight: bodyHeight,
         ),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            // Add one stop for each color. Stops should increase from 0 to 1
-            //stops: [0.1, 0.5,0.5, 0.7, 0.9],
-            colors: [
-              ColorTween(
-                begin: Colors.redAccent,
-                end: Colors.red[400].withRed(100),
-              ).lerp(swipeOffset),
-              ColorTween(
-                begin: Colors.red,
-                end: Colors.red[800].withGreen(80),
-              ).lerp(swipeOffset),
-            ],
-          ),
-        ),
+        decoration: BoxDecoration(color: Colors.red),
         child: Stack(
           children: <Widget>[
             Padding(
@@ -77,25 +55,6 @@ class _LeftChildState extends State<LeftChild> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(left: 10, bottom: 15),
-                        width: 80,
-                        child: ClipRRect(
-                          child: Image.network(
-                            "https://img.icons8.com/officel/2x/user.png",
-                          ),
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                      ),
-                      Text(
-                        "User",
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      )
-                    ],
-                    //mainAxisAlignment: MainAxisAlignment.center,
-                  ),
                   Padding(
                     padding: EdgeInsets.all(10),
                   ),
@@ -141,15 +100,13 @@ class _LeftChildState extends State<LeftChild> {
                       size: 22,
                     ),
                   ),
-                  ListTile(
-                    title: Text(
-                      "Suggested People",
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    leading: Icon(
-                      Icons.person_add,
-                      size: 22,
-                    ),
+                  ElevatedButton(
+                    child: Text("close"),
+                    onPressed: () {
+                      // direction is optional
+                      // if not set, the last direction will be used
+                      innerDrawerKey.currentState.close();
+                    },
                   ),
                 ],
               ),
