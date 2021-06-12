@@ -33,12 +33,14 @@ class _MyAppState extends State<MyApp> {
         title: 'Inner Drawer',
         theme: ThemeData(
             primaryColor: Color(0xFF075E54), accentColor: Color(0xFF128C7E)),
-        home: InnerDrawer(
-          key: _key,
-          leftChild: leftChild,
-          rightChild: RightChild(innerDrawerKey: _key),
-          scaffold: ScaffoldDrawer(innerDrawerKey: _key),
-          innerDrawerCallback: callback,
+        home: Scaffold(
+          body: InnerDrawer(
+            key: _key,
+            leftChild: leftChild,
+            rightChild: RightChild(innerDrawerKey: _key),
+            scaffold: ScaffoldDrawer(innerDrawerKey: _key),
+            innerDrawerCallback: callback,
+          ),
         ));
   }
 
