@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 import '../Screens/InnerDrawer.dart';
 
 class LeftChild extends StatelessWidget {
+  ///InnerDrawer widget globalKey
+
   final GlobalKey<InnerDrawerState> innerDrawerKey;
+
   LeftChild({this.innerDrawerKey, Key key}) : super(key: key);
 
   final leftKey = GlobalKey<ScrollBottomNavigationBarState>();

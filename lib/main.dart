@@ -11,35 +11,38 @@ void main() => runApp(ChangeNotifierProvider(
       child: MyApp(),
     ));
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   final _key = GlobalKey<InnerDrawerState>();
 
   LeftChild leftChild;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     leftChild = LeftChild(innerDrawerKey: _key);
     return MaterialApp(
-      title: 'Inner Drawer',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        backgroundColor: Colors.white,
-      ),
-      home: Scaffold(
-          body: SafeArea(
-        // 加入SafeArea
-        child: InnerDrawer(
+        title: 'Inner Drawer',
+        theme: ThemeData(
+            primaryColor: Color(0xFF075E54), accentColor: Color(0xFF128C7E)),
+        home: InnerDrawer(
           key: _key,
           leftChild: leftChild,
           rightChild: RightChild(innerDrawerKey: _key),
           scaffold: ScaffoldDrawer(innerDrawerKey: _key),
           innerDrawerCallback: callback,
-        ),
-      )),
-    );
+        ));
   }
 
-  callback(left, open) {
+  void callback(bool left, bool open) {
     print("yao drawer callback left=$left open=$open");
     if (left && open) {
       leftChild.show();
