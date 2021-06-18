@@ -16,23 +16,25 @@ enum InnerDrawerDirection {
   end,
 }
 
-//width before initState
-const double _kMinFlingVelocity = 365.0;
-const double _offset = 0.8;
-const Duration _kBaseSettleDuration = Duration(milliseconds: 20);
+///从 10%显示的地方开始
+const double offset = 0.1;
+
+///摔动速度识别定义
+const double kMinFlingVelocity = 200;
+
+///只有正负的区别
+const double velocity = 20;
 
 class InnerDrawer extends StatefulWidget {
   const InnerDrawer(
       {GlobalKey key,
-      this.leftChild,
-      this.rightChild,
-      this.scaffold,
+      @required this.leftChild,
+      @required this.rightChild,
+      @required this.scaffold,
       this.onTapClose = false,
       this.tapScaffoldEnabled = false,
-      this.velocity = 20,
       this.innerDrawerCallback})
-      : assert(leftChild != null || rightChild != null),
-        super(key: key);
+      : super(key: key);
 
   /// Left child
   final Widget leftChild;
@@ -49,9 +51,6 @@ class InnerDrawer extends StatefulWidget {
   /// Closes the open scaffold
   final bool onTapClose;
 
-  /// possibility to set the opening and closing velocity
-  final double velocity;
-
   /// Optional callback that is called when a [InnerDrawer] is open or closed.
   final InnerDrawerCallback innerDrawerCallback;
 
@@ -61,21 +60,20 @@ class InnerDrawer extends StatefulWidget {
 
 class InnerDrawerState extends State<InnerDrawer>
     with SingleTickerProviderStateMixin {
+  ///屏幕宽度
   double _initWidth = 0;
-  final FocusScopeNode _focusScopeNode = FocusScopeNode();
-  bool _previouslyOpened = false;
 
-  InnerDrawerDirection _position;
+  InnerDrawerDirection _position = InnerDrawerDirection.start;
+
   AnimationController _controller;
 
   @override
   void initState() {
-    _position = _leftChild != null
-        ? InnerDrawerDirection.start
-        : InnerDrawerDirection.end;
-
     _controller = AnimationController(
-        value: -_offset, duration: _kBaseSettleDuration, vsync: this)
+        lowerBound: offset,
+        upperBound: 1,
+        duration: Duration(milliseconds: 20),
+        vsync: this)
       ..addListener(_animationChanged)
       ..addStatusListener(_animationStatusChanged);
 
@@ -85,7 +83,6 @@ class InnerDrawerState extends State<InnerDrawer>
   @override
   void dispose() {
     _controller.dispose();
-    _focusScopeNode.dispose();
     super.dispose();
   }
 
@@ -94,12 +91,6 @@ class InnerDrawerState extends State<InnerDrawer>
     if (_initWidth == 0) {
       _initWidth = MediaQuery.of(context).size.width;
     }
-
-    /// wFactor depends of offset and is used by the second Align that contains the Scaffold
-    final double offset = 0.5 - _offset * 0.5;
-    //NEW
-    //final double offset = 1 - _offset * 1;
-    final double wFactor = (_controller.value * (1 - offset)) + offset;
 
     return Container(
       child: Stack(
@@ -115,7 +106,7 @@ class InnerDrawerState extends State<InnerDrawer>
               alignment: _drawerOuterAlignment,
               child: Align(
                   alignment: _drawerInnerAlignment,
-                  widthFactor: wFactor,
+                  widthFactor: _controller.value,
                   child: _scaffold),
             ),
           ),
@@ -131,8 +122,6 @@ class InnerDrawerState extends State<InnerDrawer>
   }
 
   void _animationStatusChanged(AnimationStatus status) {
-    final bool opened = _controller.value < 0.5 ? true : false;
-
     switch (status) {
       case AnimationStatus.reverse:
         break;
@@ -168,39 +157,19 @@ class InnerDrawerState extends State<InnerDrawer>
         break;
     }
 
-    switch (Directionality.of(context)) {
-      case TextDirection.rtl:
-        _controller.value -= delta + (delta * _offset);
-        break;
-      case TextDirection.ltr:
-        _controller.value += delta + (delta * _offset);
-        break;
-    }
-
-    final bool opened = _controller.value < 0.5 ? true : false;
-    _previouslyOpened = opened;
+    _controller.value += delta;
   }
 
   void _handleDragEnd(DragEndDetails details) {
     if (_controller.isDismissed) return;
-    if (details.velocity.pixelsPerSecond.dx.abs() >= _kMinFlingVelocity) {
+    if (details.velocity.pixelsPerSecond.dx.abs() >= kMinFlingVelocity) {
       double visualVelocity =
-          (details.velocity.pixelsPerSecond.dx + _velocity) / _width;
-      switch (_position) {
-        case InnerDrawerDirection.end:
-          break;
-        case InnerDrawerDirection.start:
-          visualVelocity = -visualVelocity;
-          break;
-      }
-      switch (Directionality.of(context)) {
-        case TextDirection.rtl:
-          _controller.fling(velocity: -visualVelocity);
-          break;
-        case TextDirection.ltr:
-          _controller.fling(velocity: visualVelocity);
-          break;
-      }
+          (details.velocity.pixelsPerSecond.dx + velocity) / _width;
+
+      if (_position == InnerDrawerDirection.start)
+        visualVelocity = -visualVelocity;
+
+      _controller.fling(velocity: visualVelocity);
     } else if (_controller.value < 0.5) {
       open();
       if (widget.innerDrawerCallback != null)
@@ -215,50 +184,38 @@ class InnerDrawerState extends State<InnerDrawer>
     return _initWidth;
   }
 
-  double get _velocity {
-    return widget.velocity;
-  }
-
   void open({InnerDrawerDirection direction}) {
     if (direction != null) _position = direction;
-    _controller.fling(velocity: -_velocity);
+    _controller.fling(velocity: -velocity);
   }
 
   void openLeft() {
     _position = InnerDrawerDirection.start;
-    _controller.fling(velocity: -_velocity);
+    _controller.fling(velocity: -velocity);
   }
 
   void openRight() {
     _position = InnerDrawerDirection.end;
-    _controller.fling(velocity: -_velocity);
+    _controller.fling(velocity: -velocity);
   }
 
   void close({InnerDrawerDirection direction}) {
     if (direction != null) _position = direction;
-    _controller.fling(velocity: _velocity);
+    _controller.fling(velocity: velocity);
   }
 
   /// Outer Alignment
   AlignmentDirectional get _drawerOuterAlignment {
-    switch (_position) {
-      case InnerDrawerDirection.start:
-        return AlignmentDirectional.centerEnd;
-      case InnerDrawerDirection.end:
-        return AlignmentDirectional.centerStart;
-    }
-    return null;
+    if (_position == InnerDrawerDirection.start)
+      return AlignmentDirectional.centerEnd;
+    return AlignmentDirectional.centerStart;
   }
 
   /// Inner Alignment
   AlignmentDirectional get _drawerInnerAlignment {
-    switch (_position) {
-      case InnerDrawerDirection.start:
-        return AlignmentDirectional.centerStart;
-      case InnerDrawerDirection.end:
-        return AlignmentDirectional.centerEnd;
-    }
-    return null;
+    if (_position == InnerDrawerDirection.end)
+      return AlignmentDirectional.centerEnd;
+    return AlignmentDirectional.centerStart;
   }
 
   /// Scaffold
@@ -290,41 +247,4 @@ class InnerDrawerState extends State<InnerDrawer>
     );
     return container;
   }
-}
-
-///An immutable set of offset in each of the four cardinal directions.
-class IDOffset {
-  const IDOffset.horizontal(
-    double horizontal,
-  )   : left = horizontal,
-        top = 0.0,
-        right = horizontal,
-        bottom = 0.0;
-
-  const IDOffset.only({
-    this.left = 0.0,
-    this.top = 0.0,
-    this.right = 0.0,
-    this.bottom = 0.0,
-  })  : assert(top >= 0.0 &&
-            top <= 1.0 &&
-            left >= 0.0 &&
-            left <= 1.0 &&
-            right >= 0.0 &&
-            right <= 1.0 &&
-            bottom >= 0.0 &&
-            bottom <= 1.0),
-        assert(top >= 0.0 && bottom == 0.0 || top == 0.0 && bottom >= 0.0);
-
-  /// The offset from the left.
-  final double left;
-
-  /// The offset from the top.
-  final double top;
-
-  /// The offset from the right.
-  final double right;
-
-  /// The offset from the bottom.
-  final double bottom;
 }
