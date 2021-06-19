@@ -99,7 +99,7 @@ class InnerDrawerState extends State<InnerDrawer>
           _animatedChild(),
           GestureDetector(
             onHorizontalDragDown: _handleDragDown,
-            onHorizontalDragUpdate: __handleDragMove,
+            onHorizontalDragUpdate: _handleDragMove,
             onHorizontalDragEnd: _handleDragEnd,
             excludeFromSemantics: true, //语义树中排除一些手势
             child: Align(
@@ -141,7 +141,7 @@ class InnerDrawerState extends State<InnerDrawer>
           (_position == InnerDrawerDirection.start ? true : false), false);
   }
 
-  void __handleDragMove(DragUpdateDetails details) {
+  void _handleDragMove(DragUpdateDetails details) {
     double delta = details.primaryDelta / _width;
 
     if (delta > 0 && _controller.value == 1 && _leftChild != null)
