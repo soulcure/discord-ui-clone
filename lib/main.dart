@@ -44,11 +44,10 @@ class _MyAppState extends State<MyApp> {
         ));
   }
 
-  void callback(bool left, bool open) {
-    print("yao drawer callback left=$left open=$open");
-    if (left && open) {
+  void callback(int status) {
+    if (status == 1) {
       leftChild.show();
-    } else if (left && !open) {
+    } else if (status == 0) {
       leftChild.hide();
     }
   }

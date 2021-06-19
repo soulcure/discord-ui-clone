@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-/// Signature for the callback that's called when a [InnerDrawer] is
-/// opened or closed.
-typedef InnerDrawerCallback = void Function(bool isLeft, bool isOpened);
+///tabbar 1 show  0 close
+typedef InnerDrawerCallback = void Function(int value);
 
 /// Signature for when a pointer that is in contact with the screen and moves to the right or left
 /// values between 1 and 0
@@ -122,23 +121,48 @@ class InnerDrawerState extends State<InnerDrawer>
   }
 
   void _animationStatusChanged(AnimationStatus status) {
+    print("yao _animationStatusChanged status=$status");
     switch (status) {
       case AnimationStatus.reverse:
+        callback();
         break;
       case AnimationStatus.forward:
+        callback();
         break;
       case AnimationStatus.dismissed:
+        callback();
         break;
       case AnimationStatus.completed:
+        callback();
+        break;
+    }
+  }
+
+  void callback() {
+    if (widget.innerDrawerCallback != null &&
+        _position == InnerDrawerDirection.start) {
+      if (_controller.value == offset) {
+        show();
+      } else {
+        hide();
+      }
+    }
+  }
+
+  void hide() {
+    if (widget.innerDrawerCallback != null) {
+      widget.innerDrawerCallback(0);
+    }
+  }
+
+  void show() {
+    if (widget.innerDrawerCallback != null) {
+      widget.innerDrawerCallback(1);
     }
   }
 
   void _handleDragDown(DragDownDetails details) {
     _controller.stop();
-
-    if (widget.innerDrawerCallback != null)
-      widget.innerDrawerCallback(
-          (_position == InnerDrawerDirection.start ? true : false), false);
   }
 
   void _handleDragMove(DragUpdateDetails details) {
@@ -172,9 +196,6 @@ class InnerDrawerState extends State<InnerDrawer>
       _controller.fling(velocity: visualVelocity);
     } else if (_controller.value < 0.5) {
       open();
-      if (widget.innerDrawerCallback != null)
-        widget.innerDrawerCallback(
-            (_position == InnerDrawerDirection.start ? true : false), true);
     } else {
       close();
     }
@@ -190,13 +211,11 @@ class InnerDrawerState extends State<InnerDrawer>
   }
 
   void openLeft() {
-    _position = InnerDrawerDirection.start;
-    _controller.fling(velocity: -velocity);
+    open(direction: InnerDrawerDirection.start);
   }
 
   void openRight() {
-    _position = InnerDrawerDirection.end;
-    _controller.fling(velocity: -velocity);
+    open(direction: InnerDrawerDirection.end);
   }
 
   void close({InnerDrawerDirection direction}) {

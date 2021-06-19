@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 class ScrollBottomNavigationBar extends StatefulWidget {
@@ -49,15 +47,44 @@ class ScrollBottomNavigationBar extends StatefulWidget {
       ScrollBottomNavigationBarState();
 }
 
-class ScrollBottomNavigationBarState extends State<ScrollBottomNavigationBar> {
-  Widget bottomNavigationBar;
+class ScrollBottomNavigationBarState extends State<ScrollBottomNavigationBar>
+    with SingleTickerProviderStateMixin {
   Color backgroundColor;
 
   /// Notifier of the active page index
   final tabNotifier = ValueNotifier<int>(0);
 
-  /// Notifier of the visible height factor of bar
-  final heightNotifier = ValueNotifier<double>(1.0);
+  AnimationController _controller;
+
+  void show() {
+    if (!_controller.isAnimating) {
+      _controller.reverse();
+    }
+  }
+
+  void hide() {
+    if (!_controller.isAnimating) {
+      _controller.forward();
+    }
+  }
+
+  /// Set a new tab
+  void setTab(int index) => tabNotifier.value = index;
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+        vsync: this,
+        lowerBound: 0,
+        upperBound: 1,
+        duration: Duration(milliseconds: 400))
+      ..addListener(() {
+        setState(() {
+          // The animation controller's state is our build state, and it changed already.
+        });
+      });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,95 +103,12 @@ class ScrollBottomNavigationBarState extends State<ScrollBottomNavigationBar> {
   @override
   void dispose() {
     tabNotifier.dispose();
-    heightNotifier.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
-  double height = 56.0;
-
-  void show() {
-    const duration = const Duration(milliseconds: 40);
-    Timer.periodic(duration, (timer) {
-      switch (timer.tick) {
-        case 1:
-          heightNotifier.value = 0.1;
-          break;
-        case 2:
-          heightNotifier.value = 0.2;
-          break;
-        case 3:
-          heightNotifier.value = 0.3;
-          break;
-        case 4:
-          heightNotifier.value = 0.4;
-          break;
-        case 5:
-          heightNotifier.value = 0.5;
-          break;
-        case 6:
-          heightNotifier.value = 0.6;
-          break;
-        case 7:
-          heightNotifier.value = 0.7;
-          break;
-        case 8:
-          heightNotifier.value = 0.8;
-          break;
-        case 9:
-          heightNotifier.value = 0.9;
-          break;
-        case 9:
-          heightNotifier.value = 1.0;
-          timer.cancel();
-          break;
-      }
-    });
-  }
-
-  void hide() {
-    const duration = const Duration(milliseconds: 40);
-    Timer.periodic(duration, (timer) {
-      switch (timer.tick) {
-        case 1:
-          heightNotifier.value = 0.9;
-          break;
-        case 2:
-          heightNotifier.value = 0.8;
-          break;
-        case 3:
-          heightNotifier.value = 0.7;
-          break;
-        case 4:
-          heightNotifier.value = 0.6;
-          break;
-        case 5:
-          heightNotifier.value = 0.5;
-          break;
-        case 6:
-          heightNotifier.value = 0.4;
-          break;
-        case 7:
-          heightNotifier.value = 0.3;
-          break;
-        case 8:
-          heightNotifier.value = 0.2;
-          break;
-        case 9:
-          heightNotifier.value = 0.1;
-          break;
-        case 9:
-          heightNotifier.value = 0.0;
-          timer.cancel();
-          break;
-      }
-    });
-  }
-
-  /// Set a new tab
-  void setTab(int index) => tabNotifier.value = index;
-
   Widget _tab(BuildContext context, int index, Widget child) {
-    bottomNavigationBar = BottomNavigationBar(
+    Widget bottomNavigationBar = BottomNavigationBar(
       onTap: setTab,
       currentIndex: index,
       items: widget.items,
@@ -183,50 +127,27 @@ class ScrollBottomNavigationBarState extends State<ScrollBottomNavigationBar> {
       unselectedLabelStyle: widget.unselectedLabelStyle,
       showSelectedLabels: widget.showSelectedLabels,
     );
+    final value = 1 - _controller.value;
 
-    return ValueListenableBuilder<double>(
-      valueListenable: heightNotifier,
-      builder: _height,
-    );
-  }
-
-  Widget _height(BuildContext context, double height, Widget child) {
-    return _align(height);
-  }
-
-  Widget _align(double heightFactor) {
     return Align(
-      heightFactor: heightFactor,
+      heightFactor: value,
       alignment: Alignment(0, -1),
-      child: _elevation(heightFactor),
-    );
-  }
-
-  Widget _elevation(double heightFactor) {
-    return Material(
-      elevation: widget.elevation,
-      type: widget.materialType != null
-          ? widget.materialType
-          : MaterialType.canvas,
-      child: _decoratedContainer(heightFactor),
-    );
-  }
-
-  Widget _decoratedContainer(double heightFactor) {
-    return Container(
-      height: height,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        gradient: widget.backgroundGradient,
+      child: Material(
+        elevation: widget.elevation,
+        type: widget.materialType != null
+            ? widget.materialType
+            : MaterialType.canvas,
+        child: Container(
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            gradient: widget.backgroundGradient,
+          ),
+          child: Opacity(
+            opacity: value,
+            child: bottomNavigationBar,
+          ),
+        ),
       ),
-      child: _opacity(heightFactor),
-    );
-  }
-
-  Widget _opacity(double heightFactor) {
-    return Opacity(
-      opacity: heightFactor,
-      child: bottomNavigationBar,
     );
   }
 }
