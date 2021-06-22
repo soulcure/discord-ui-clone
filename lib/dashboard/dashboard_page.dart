@@ -1,7 +1,7 @@
 import 'package:discord_ui_clone/Widget/scroll_bottom_navigation_bar.dart';
-import 'package:discord_ui_clone/Screens/left_screen.dart';
-import 'package:discord_ui_clone/Screens/right_screen.dart';
-import 'package:discord_ui_clone/Screens/center_screen.dart';
+import 'package:discord_ui_clone/screens/left_screen.dart';
+import 'package:discord_ui_clone/screens/right_screen.dart';
+import 'package:discord_ui_clone/screens/center_screen.dart';
 import 'package:discord_ui_clone/other/InnerDrawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
