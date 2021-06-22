@@ -1,5 +1,5 @@
 import 'package:discord_ui_clone/Model/ChatModel.dart';
-import 'package:discord_ui_clone/Screens/IndividualPage.dart';
+import 'package:discord_ui_clone/other/IndividualPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

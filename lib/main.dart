@@ -1,54 +1,23 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'Screens/InnerDrawer.dart';
-import 'children/left_child_1.dart';
-import 'children/right_child_1.dart';
-import 'notifier/drawer_notifier.dart';
-import 'scaffolds/scaffolds_1.dart';
+import 'package:get/get.dart';
+import 'routes/app_pages.dart';
+import 'routes/app_routes.dart';
+import 'themes/app_theme.dart';
 
-void main() => runApp(ChangeNotifierProvider(
-      create: (context) => DrawerNotifier(),
-      child: MyApp(),
-    ));
-
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
+void main() {
+  runApp(MyApp());
 }
 
-class _MyAppState extends State<MyApp> {
-  final _key = GlobalKey<InnerDrawerState>();
-
-  LeftChild leftChild;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    leftChild = LeftChild(innerDrawerKey: _key);
-    return MaterialApp(
-        title: 'Inner Drawer',
-        theme: ThemeData(
-            primaryColor: Color(0xFF075E54), accentColor: Color(0xFF128C7E)),
-        home: Scaffold(
-          body: InnerDrawer(
-            key: _key,
-            leftChild: leftChild,
-            rightChild: RightChild(innerDrawerKey: _key),
-            scaffold: ScaffoldDrawer(innerDrawerKey: _key),
-            innerDrawerCallback: callback,
-          ),
-        ));
-  }
-
-  void callback(int status) {
-    if (status == 1) {
-      leftChild.show();
-    } else if (status == 0) {
-      leftChild.hide();
-    }
+    return GetMaterialApp(
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: ThemeMode.system,
+      initialRoute: AppRoutes.DASHBOARD,
+      getPages: AppPages.list,
+    );
   }
 }

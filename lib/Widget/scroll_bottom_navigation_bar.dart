@@ -77,7 +77,7 @@ class ScrollBottomNavigationBarState extends State<ScrollBottomNavigationBar>
         vsync: this,
         lowerBound: 0,
         upperBound: 1,
-        duration: Duration(milliseconds: 400))
+        duration: Duration(milliseconds: 300))
       ..addListener(() {
         setState(() {
           // The animation controller's state is our build state, and it changed already.

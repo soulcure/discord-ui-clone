@@ -1,6 +1,6 @@
 import 'package:discord_ui_clone/Model/ChatModel.dart';
-import 'package:discord_ui_clone/Screens/SelectContact.dart';
 import 'package:discord_ui_clone/View/CustomCard.dart';
+import 'package:discord_ui_clone/other/SelectContact.dart';
 import 'package:flutter/material.dart';
 
 class ChatPage extends StatefulWidget {

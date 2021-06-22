@@ -1,12 +1,11 @@
 import 'dart:ui';
+import 'package:discord_ui_clone/other/InnerDrawer.dart';
 import 'package:flutter/material.dart';
 
-import '../Screens/InnerDrawer.dart';
-
-class RightChild extends StatelessWidget {
+class RightScreen extends StatelessWidget {
   final GlobalKey<InnerDrawerState> innerDrawerKey;
 
-  RightChild({this.innerDrawerKey, Key key}) : super(key: key);
+  RightScreen({this.innerDrawerKey, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

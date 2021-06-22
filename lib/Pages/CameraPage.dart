@@ -1,4 +1,4 @@
-import 'package:discord_ui_clone/Screens/CameraScreen.dart';
+import 'package:discord_ui_clone/other/CameraScreen.dart';
 import 'package:flutter/material.dart';
 
 class CameraPage extends StatelessWidget {

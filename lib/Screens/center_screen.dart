@@ -1,11 +1,10 @@
+import 'package:discord_ui_clone/other/InnerDrawer.dart';
 import 'package:flutter/material.dart';
 
-import '../Screens/InnerDrawer.dart';
-
-class ScaffoldDrawer extends StatelessWidget {
+class CenterScreen extends StatelessWidget {
   final GlobalKey<InnerDrawerState> innerDrawerKey;
 
-  ScaffoldDrawer({this.innerDrawerKey, Key key}) : super(key: key);
+  CenterScreen({this.innerDrawerKey, Key key}) : super(key: key);
 
   @override
   @override

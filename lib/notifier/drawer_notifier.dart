@@ -1,4 +1,4 @@
-import 'package:discord_ui_clone/Screens/InnerDrawer.dart';
+import 'package:discord_ui_clone/other/InnerDrawer.dart';
 import 'package:flutter/material.dart';
 
 class DrawerNotifier extends ChangeNotifier {
