@@ -1,7 +1,7 @@
 // import 'package:camera/camera.dart';
 // import 'package:chatapp/CustomUI/CameraUI.dart';
-import 'package:discord_ui_clone/Model/ChatModel.dart';
-import 'package:discord_ui_clone/Model/MessageModel.dart';
+import 'package:discord_ui_clone/app/data/chat_model.dart';
+import 'package:discord_ui_clone/app/data/message_model.dart';
 import 'package:discord_ui_clone/View/OwnMessgaeCrad.dart';
 import 'package:discord_ui_clone/View/ReplyCard.dart';
 import 'package:emoji_picker/emoji_picker.dart';

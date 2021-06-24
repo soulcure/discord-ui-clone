@@ -1,4 +1,4 @@
-import 'package:discord_ui_clone/Model/ChatModel.dart';
+import 'package:discord_ui_clone/app/data/chat_model.dart';
 import 'package:discord_ui_clone/Pages/CameraPage.dart';
 import 'package:discord_ui_clone/Pages/ChatPage.dart';
 import 'package:flutter/material.dart';
