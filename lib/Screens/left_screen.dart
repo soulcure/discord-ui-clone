@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:discord_ui_clone/other/InnerDrawer.dart';
+import 'package:discord_ui_clone/widgets/inner_drawer.dart';
 import 'package:flutter/material.dart';
 
 class LeftScreen extends StatelessWidget {
