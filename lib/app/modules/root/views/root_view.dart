@@ -1,4 +1,5 @@
 import 'package:discord_ui_clone/Widget/scroll_bottom_navigation_bar.dart';
+import 'package:discord_ui_clone/app/modules/root/controllers/root_controller.dart';
 import 'package:discord_ui_clone/screens/left_screen.dart';
 import 'package:discord_ui_clone/screens/right_screen.dart';
 import 'package:discord_ui_clone/screens/center_screen.dart';
@@ -7,15 +8,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'dashboard_controller.dart';
-
-class DashboardPage extends StatelessWidget {
+class RootView extends GetView<RootController> {
   final _key = GlobalKey<InnerDrawerState>();
   final leftKey = GlobalKey<ScrollBottomNavigationBarState>();
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<DashboardController>(
+    return GetBuilder<RootController>(
       builder: (controller) {
         return Scaffold(
           body: InnerDrawer(
