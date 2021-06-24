@@ -9,7 +9,7 @@ void main() {
     theme: AppTheme.light,
     darkTheme: AppTheme.dark,
     themeMode: ThemeMode.system,
-    initialRoute: Routes.ROOT,
+    initialRoute: AppPages.ROOT,
     getPages: AppPages.routes,
   ));
 }
