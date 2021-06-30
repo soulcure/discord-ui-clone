@@ -75,7 +75,7 @@ class LeftScreen extends StatelessWidget {
               onPressed: () {
                 // direction is optional
                 // if not set, the last direction will be used
-                innerDrawerKey.currentState.close();
+                innerDrawerKey.currentState.open();
               },
             ),
             ElevatedButton(

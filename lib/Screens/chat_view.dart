@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:math';
+import 'package:discord_ui_clone/utils/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -26,7 +27,7 @@ class ScrollablePositionedListExample extends StatelessWidget {
     return MaterialApp(
       title: 'ScrollablePositionedList Example',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const ScrollablePositionedListPage(),
+      home: ScrollablePositionedListPage(),
     );
   }
 }
@@ -43,8 +44,10 @@ class ScrollablePositionedListExample extends StatelessWidget {
 /// will be vertically scrollable, and if the device is in landscape mode, the
 /// list will be horizontally scrollable.
 class ScrollablePositionedListPage extends StatefulWidget {
-  const ScrollablePositionedListPage({Key key}) : super(key: key);
+  final int defaultPosition;
 
+  ScrollablePositionedListPage({Key key, this.defaultPosition = 0})
+      : super(key: key);
   @override
   _ScrollablePositionedListPageState createState() =>
       _ScrollablePositionedListPageState();
@@ -68,6 +71,19 @@ class _ScrollablePositionedListPageState
   @override
   void initState() {
     super.initState();
+
+    Event.eventBus.on<ListPositon>().listen((event) {
+      // Print the runtime type. Such a set up could be used for logging.
+      if (event.isScroll) {
+        scrollTo(event.positon);
+      } else {
+        jumpTo(event.positon);
+      }
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => itemScrollController.jumpTo(index: 50, alignment: alignment));
+
     final heightGenerator = Random(328902348);
     final colorGenerator = Random(42490823);
     itemHeights = List<double>.generate(
