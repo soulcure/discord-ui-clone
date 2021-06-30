@@ -70,6 +70,38 @@ class LeftScreen extends StatelessWidget {
                 innerDrawerKey.currentState.close();
               },
             ),
+            ElevatedButton(
+              child: Text("socroll to 100"),
+              onPressed: () {
+                // direction is optional
+                // if not set, the last direction will be used
+                innerDrawerKey.currentState.close();
+              },
+            ),
+            ElevatedButton(
+              child: Text("socroll to 500"),
+              onPressed: () {
+                // direction is optional
+                // if not set, the last direction will be used
+                innerDrawerKey.currentState.close();
+              },
+            ),
+            ElevatedButton(
+              child: Text("jump to 100"),
+              onPressed: () {
+                // direction is optional
+                // if not set, the last direction will be used
+                innerDrawerKey.currentState.close();
+              },
+            ),
+            ElevatedButton(
+              child: Text("jump to 500"),
+              onPressed: () {
+                // direction is optional
+                // if not set, the last direction will be used
+                innerDrawerKey.currentState.close();
+              },
+            ),
           ],
         ),
       ),
