@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 import '../controllers/contact_controller.dart';
 
-class HomeView extends GetView<ContactController> {
+class ContactView extends GetView<ContactController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

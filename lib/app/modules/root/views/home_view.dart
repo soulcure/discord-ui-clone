@@ -1,5 +1,5 @@
 import 'package:discord_ui_clone/account/account_page.dart';
-import 'package:discord_ui_clone/app/modules/root/controllers/root_controller.dart';
+import 'package:discord_ui_clone/app/modules/root/controllers/home_controller.dart';
 import 'package:discord_ui_clone/news/news_page.dart';
 import 'package:discord_ui_clone/screens/left_screen.dart';
 import 'package:discord_ui_clone/screens/right_screen.dart';
@@ -10,10 +10,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class RootView extends GetView<RootController> {
+class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<RootController>(
+    return GetBuilder<HomeController>(
       builder: (controller) {
         return Scaffold(
           body: SafeArea(
