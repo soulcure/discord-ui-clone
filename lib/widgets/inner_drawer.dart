@@ -170,13 +170,13 @@ class InnerDrawerState extends State<InnerDrawer>
         }
         break;
       case AnimationStatus.dismissed:
-        show();
+        if (_position == InnerDrawerDirection.start) show();
         isRightToLeft = false;
         isLeftToRight = false;
         isCallBack = false;
         break;
       case AnimationStatus.completed:
-        hide();
+        if (_position == InnerDrawerDirection.start) hide();
         isRightToLeft = false;
         isLeftToRight = false;
         isCallBack = false;

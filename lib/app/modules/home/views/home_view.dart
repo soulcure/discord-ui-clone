@@ -1,5 +1,5 @@
 import 'package:discord_ui_clone/account/account_page.dart';
-import 'package:discord_ui_clone/app/modules/root/controllers/home_controller.dart';
+import 'package:discord_ui_clone/app/modules/home/controllers/home_controller.dart';
 import 'package:discord_ui_clone/news/news_page.dart';
 import 'package:discord_ui_clone/screens/left_screen.dart';
 import 'package:discord_ui_clone/screens/right_screen.dart';
