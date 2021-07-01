@@ -12,7 +12,7 @@ class CenterScreen extends StatelessWidget {
         leading: IconButton(
           icon: Icon(
             Icons.menu,
-            size: 22,
+            size: 28,
             color: Colors.deepOrange,
           ),
           onPressed: () {},
