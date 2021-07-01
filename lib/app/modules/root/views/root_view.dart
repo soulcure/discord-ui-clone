@@ -1,4 +1,6 @@
+import 'package:discord_ui_clone/account/account_page.dart';
 import 'package:discord_ui_clone/app/modules/root/controllers/root_controller.dart';
+import 'package:discord_ui_clone/news/news_page.dart';
 import 'package:discord_ui_clone/screens/left_screen.dart';
 import 'package:discord_ui_clone/screens/right_screen.dart';
 import 'package:discord_ui_clone/screens/center_screen.dart';
@@ -14,12 +16,29 @@ class RootView extends GetView<RootController> {
     return GetBuilder<RootController>(
       builder: (controller) {
         return Scaffold(
-          body: InnerDrawer(
-            leftChild: LeftScreen(),
-            rightChild: RightScreen(),
-            scaffold: CenterScreen(),
+          body: SafeArea(
+            child: IndexedStack(
+              index: controller.tabIndex,
+              children: [
+                InnerDrawer(
+                  leftChild: LeftScreen(),
+                  rightChild: RightScreen(),
+                  scaffold: CenterScreen(),
+                ),
+                NewsPage(),
+                AccountPage(),
+              ],
+            ),
           ),
           bottomNavigationBar: ScrollBottomNavigationBar(
+            unselectedItemColor: Colors.black,
+            selectedItemColor: Colors.redAccent,
+            onTap: controller.changeTabIndex,
+            currentIndex: controller.tabIndex,
+            showSelectedLabels: true,
+            showUnselectedLabels: false,
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.white,
             items: [
               _bottomNavigationBarItem(
                 icon: CupertinoIcons.home,

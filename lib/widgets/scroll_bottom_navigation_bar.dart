@@ -2,15 +2,16 @@ import 'dart:async';
 
 import 'package:discord_ui_clone/utils/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class ScrollBottomNavigationBar extends StatefulWidget {
   final List<BottomNavigationBarItem> items;
+  final ValueChanged<int> onTap;
+  final int currentIndex;
   final double elevation;
   final BottomNavigationBarType type;
   final Color fixedColor;
   final Color backgroundColor;
-  final Gradient backgroundGradient;
-  final MaterialType materialType;
   final double iconSize;
   final Color selectedItemColor;
   final Color unselectedItemColor;
@@ -22,27 +23,29 @@ class ScrollBottomNavigationBar extends StatefulWidget {
   final TextStyle unselectedLabelStyle;
   final bool showSelectedLabels;
   final bool showUnselectedLabels;
+  final MouseCursor mouseCursor;
 
   ScrollBottomNavigationBar({
     Key key,
     @required this.items,
-    this.elevation = 8.0,
+    this.onTap,
+    this.currentIndex = 0,
+    this.elevation,
     this.type,
     this.fixedColor,
-    this.backgroundColor = Colors.transparent,
-    this.materialType,
-    this.backgroundGradient,
+    this.backgroundColor,
     this.iconSize = 24.0,
     this.selectedItemColor,
     this.unselectedItemColor,
-    this.selectedIconTheme = const IconThemeData(),
-    this.unselectedIconTheme = const IconThemeData(),
+    this.selectedIconTheme,
+    this.unselectedIconTheme,
     this.selectedFontSize = 14.0,
     this.unselectedFontSize = 12.0,
     this.selectedLabelStyle,
     this.unselectedLabelStyle,
-    this.showSelectedLabels = true,
+    this.showSelectedLabels,
     this.showUnselectedLabels,
+    this.mouseCursor,
   }) : super(key: key);
 
   @override
@@ -53,9 +56,6 @@ class ScrollBottomNavigationBar extends StatefulWidget {
 class ScrollBottomNavigationBarState extends State<ScrollBottomNavigationBar>
     with SingleTickerProviderStateMixin {
   Color backgroundColor;
-
-  /// Notifier of the active page index
-  final tabNotifier = ValueNotifier<int>(0);
 
   AnimationController _controller;
   StreamSubscription _subscription;
@@ -86,7 +86,6 @@ class ScrollBottomNavigationBarState extends State<ScrollBottomNavigationBar>
 
   @override
   void dispose() {
-    tabNotifier.dispose();
     _controller.dispose();
     _subscription.cancel();
     super.dispose();
@@ -94,15 +93,37 @@ class ScrollBottomNavigationBarState extends State<ScrollBottomNavigationBar>
 
   @override
   Widget build(BuildContext context) {
-    if (widget.backgroundGradient == null) {
-      backgroundColor = widget.backgroundColor ??
-          Theme.of(context).canvasColor ??
-          Colors.white;
-    }
+    final value = 1 - _controller.value;
 
-    return ValueListenableBuilder<int>(
-      valueListenable: tabNotifier,
-      builder: _tab,
+    return Align(
+      heightFactor: value,
+      alignment: Alignment(0, -1),
+      child: Container(
+        child: Opacity(
+          opacity: value,
+          child: BottomNavigationBar(
+            items: widget.items,
+            onTap: widget.onTap,
+            currentIndex: widget.currentIndex,
+            elevation: widget.elevation,
+            type: widget.type,
+            fixedColor: widget.fixedColor,
+            backgroundColor: widget.backgroundColor,
+            iconSize: widget.iconSize,
+            selectedItemColor: widget.selectedItemColor,
+            unselectedItemColor: widget.unselectedItemColor,
+            selectedIconTheme: widget.selectedIconTheme,
+            unselectedIconTheme: widget.unselectedIconTheme,
+            selectedFontSize: widget.selectedFontSize,
+            unselectedFontSize: widget.unselectedFontSize,
+            selectedLabelStyle: widget.selectedLabelStyle,
+            unselectedLabelStyle: widget.unselectedLabelStyle,
+            showSelectedLabels: widget.showSelectedLabels,
+            showUnselectedLabels: widget.showUnselectedLabels,
+            mouseCursor: widget.mouseCursor,
+          ),
+        ),
+      ),
     );
   }
 
@@ -116,52 +137,5 @@ class ScrollBottomNavigationBarState extends State<ScrollBottomNavigationBar>
     if (!_controller.isAnimating) {
       _controller.forward();
     }
-  }
-
-  /// Set a new tab
-  void setTab(int index) => tabNotifier.value = index;
-
-  Widget _tab(BuildContext context, int index, Widget child) {
-    Widget bottomNavigationBar = BottomNavigationBar(
-      onTap: setTab,
-      currentIndex: index,
-      items: widget.items,
-      elevation: 0.0,
-      type: widget.type,
-      fixedColor: widget.fixedColor,
-      backgroundColor: Colors.transparent,
-      iconSize: widget.iconSize,
-      selectedItemColor: widget.selectedItemColor,
-      unselectedItemColor: widget.unselectedItemColor,
-      selectedIconTheme: widget.selectedIconTheme,
-      unselectedIconTheme: widget.unselectedIconTheme,
-      selectedFontSize: widget.selectedFontSize,
-      unselectedFontSize: widget.unselectedFontSize,
-      selectedLabelStyle: widget.selectedLabelStyle,
-      unselectedLabelStyle: widget.unselectedLabelStyle,
-      showSelectedLabels: widget.showSelectedLabels,
-    );
-    final value = 1 - _controller.value;
-
-    return Align(
-      heightFactor: value,
-      alignment: Alignment(0, -1),
-      child: Material(
-        elevation: widget.elevation,
-        type: widget.materialType != null
-            ? widget.materialType
-            : MaterialType.canvas,
-        child: Container(
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            gradient: widget.backgroundGradient,
-          ),
-          child: Opacity(
-            opacity: value,
-            child: bottomNavigationBar,
-          ),
-        ),
-      ),
-    );
   }
 }
