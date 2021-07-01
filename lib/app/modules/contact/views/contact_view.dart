@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../controllers/home_controller.dart';
+import '../controllers/contact_controller.dart';
 
-class HomeView extends GetView<HomeController> {
+class HomeView extends GetView<ContactController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

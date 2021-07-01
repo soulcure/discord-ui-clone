@@ -1,5 +1,5 @@
-import 'package:discord_ui_clone/app/modules/home/bindings/home_binding.dart';
-import 'package:discord_ui_clone/app/modules/home/views/home_view.dart';
+import 'package:discord_ui_clone/app/modules/contact/bindings/contact_binding.dart';
+import 'package:discord_ui_clone/app/modules/contact/views/contact_view.dart';
 import 'package:discord_ui_clone/app/modules/root/bindings/root_binding.dart';
 import 'package:discord_ui_clone/app/modules/root/views/root_view.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
@@ -21,7 +21,7 @@ class AppPages {
     GetPage(
       name: _Paths.HOME,
       page: () => HomeView(),
-      binding: HomeBinding(),
+      binding: ContactBinding(),
     ),
   ];
 }
