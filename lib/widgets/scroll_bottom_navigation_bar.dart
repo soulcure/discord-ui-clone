@@ -87,6 +87,13 @@ class ScrollBottomNavigationBarState extends State<ScrollBottomNavigationBar>
   }
 
   @override
+  void dispose() {
+    tabNotifier.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (widget.backgroundGradient == null) {
       backgroundColor = widget.backgroundColor ??
@@ -98,13 +105,6 @@ class ScrollBottomNavigationBarState extends State<ScrollBottomNavigationBar>
       valueListenable: tabNotifier,
       builder: _tab,
     );
-  }
-
-  @override
-  void dispose() {
-    tabNotifier.dispose();
-    _controller.dispose();
-    super.dispose();
   }
 
   Widget _tab(BuildContext context, int index, Widget child) {

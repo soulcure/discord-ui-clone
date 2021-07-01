@@ -9,8 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class RootView extends GetView<RootController> {
-  final _key = GlobalKey<InnerDrawerState>();
-  final leftKey = GlobalKey<ScrollBottomNavigationBarState>();
+  final _scrollNavKey = GlobalKey<ScrollBottomNavigationBarState>();
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +17,13 @@ class RootView extends GetView<RootController> {
       builder: (controller) {
         return Scaffold(
           body: InnerDrawer(
-            key: _key,
-            leftChild: LeftScreen(innerDrawerKey: _key),
-            rightChild: RightScreen(innerDrawerKey: _key),
-            scaffold: CenterScreen(innerDrawerKey: _key),
+            leftChild: LeftScreen(),
+            rightChild: RightScreen(),
+            scaffold: CenterScreen(),
             innerDrawerCallback: callback,
           ),
           bottomNavigationBar: ScrollBottomNavigationBar(
-            key: leftKey,
+            key: _scrollNavKey,
             items: [
               _bottomNavigationBarItem(
                 icon: CupertinoIcons.home,
@@ -48,9 +46,9 @@ class RootView extends GetView<RootController> {
 
   void callback(int status) {
     if (status == 1) {
-      leftKey.currentState.show();
+      _scrollNavKey.currentState.show();
     } else if (status == 0) {
-      leftKey.currentState.hide();
+      _scrollNavKey.currentState.hide();
     }
   }
 

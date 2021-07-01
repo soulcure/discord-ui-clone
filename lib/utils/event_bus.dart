@@ -1,10 +1,16 @@
 import 'package:event_bus/event_bus.dart';
 
 class ListPositon {
-  final bool isScroll;
+  final int type; //0 scroll, 1 jump
   final int positon;
 
-  ListPositon(this.isScroll, this.positon);
+  ListPositon(this.type, this.positon);
+}
+
+class InnerDrawerStatus {
+  final int status; //0 close ,1 open
+
+  InnerDrawerStatus(this.status);
 }
 
 class Event {

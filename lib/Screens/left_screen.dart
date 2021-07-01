@@ -1,14 +1,8 @@
 import 'dart:ui';
 import 'package:discord_ui_clone/utils/event_bus.dart';
-import 'package:discord_ui_clone/widgets/inner_drawer.dart';
 import 'package:flutter/material.dart';
 
 class LeftScreen extends StatelessWidget {
-  ///InnerDrawer widget globalKey
-  final GlobalKey<InnerDrawerState> innerDrawerKey;
-
-  LeftScreen({this.innerDrawerKey, Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     print("build left");
@@ -66,158 +60,126 @@ class LeftScreen extends StatelessWidget {
             ElevatedButton(
               child: Text("close"),
               onPressed: () {
-                // direction is optional
-                // if not set, the last direction will be used
-                innerDrawerKey.currentState.close();
+                Event.eventBus.fire(InnerDrawerStatus(0));
               },
             ),
             Row(
               children: [
                 ElevatedButton(
-                  child: Text("socroll to 100"),
+                  child: Text("RollTo 0"),
                   onPressed: () {
-                    // direction is optional
-                    // if not set, the last direction will be used
-                    innerDrawerKey.currentState.close();
-
-                    ListPositon event = ListPositon(true, 100);
-                    Event.eventBus.fire(event);
+                    Event.eventBus.fire(InnerDrawerStatus(0));
+                    Event.eventBus.fire(ListPositon(0, 0));
                   },
                 ),
-                SizedBox(width: 2, height: 10),
                 ElevatedButton(
-                  child: Text("socroll to 500"),
+                  child: Text("RollTo 5"),
                   onPressed: () {
-                    // direction is optional
-                    // if not set, the last direction will be used
-                    innerDrawerKey.currentState.close();
-                    ListPositon event = ListPositon(true, 500);
-                    Event.eventBus.fire(event);
+                    Event.eventBus.fire(InnerDrawerStatus(0));
+                    Event.eventBus.fire(ListPositon(0, 5));
                   },
                 ),
-                SizedBox(width: 2, height: 10),
                 ElevatedButton(
-                  child: Text("socroll to 1000"),
+                  child: Text("RollTo 10"),
                   onPressed: () {
-                    // direction is optional
-                    // if not set, the last direction will be used
-                    innerDrawerKey.currentState.close();
-                    ListPositon event = ListPositon(true, 1000);
-                    Event.eventBus.fire(event);
+                    Event.eventBus.fire(InnerDrawerStatus(0));
+                    Event.eventBus.fire(ListPositon(0, 10));
                   },
                 ),
               ],
+              // mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              // mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
             ),
             Row(
               children: [
                 ElevatedButton(
-                  child: Text("socroll to 100"),
+                  child: Text("RollTo 100"),
                   onPressed: () {
-                    // direction is optional
-                    // if not set, the last direction will be used
-                    innerDrawerKey.currentState.close();
-
-                    ListPositon event = ListPositon(true, 100);
-                    Event.eventBus.fire(event);
+                    Event.eventBus.fire(InnerDrawerStatus(0));
+                    Event.eventBus.fire(ListPositon(0, 100));
                   },
                 ),
-                SizedBox(width: 2, height: 10),
                 ElevatedButton(
-                  child: Text("socroll to 500"),
+                  child: Text("RollTo 1000"),
                   onPressed: () {
-                    // direction is optional
-                    // if not set, the last direction will be used
-                    innerDrawerKey.currentState.close();
-                    ListPositon event = ListPositon(true, 500);
-                    Event.eventBus.fire(event);
+                    Event.eventBus.fire(InnerDrawerStatus(0));
+                    Event.eventBus.fire(ListPositon(0, 1000));
                   },
                 ),
-                SizedBox(width: 2, height: 10),
                 ElevatedButton(
-                  child: Text("socroll to 1000"),
+                  child: Text("RollTo 5000"),
                   onPressed: () {
-                    // direction is optional
-                    // if not set, the last direction will be used
-                    innerDrawerKey.currentState.close();
-                    ListPositon event = ListPositon(true, 1000);
-                    Event.eventBus.fire(event);
+                    Event.eventBus.fire(InnerDrawerStatus(0));
+                    Event.eventBus.fire(ListPositon(0, 5000));
                   },
                 ),
               ],
+              // mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              // mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
             ),
             Row(
               children: [
                 ElevatedButton(
-                  child: Text("jump to 100"),
+                  child: Text("JumpTo 0"),
                   onPressed: () {
-                    // direction is optional
-                    // if not set, the last direction will be used
-                    innerDrawerKey.currentState.close();
-
-                    ListPositon event = ListPositon(false, 100);
-                    Event.eventBus.fire(event);
+                    Event.eventBus.fire(InnerDrawerStatus(0));
+                    Event.eventBus.fire(ListPositon(1, 0));
                   },
                 ),
                 SizedBox(width: 2, height: 10),
                 ElevatedButton(
-                  child: Text("jump to 500"),
+                  child: Text("JumpTo 5"),
                   onPressed: () {
-                    // direction is optional
-                    // if not set, the last direction will be used
-                    innerDrawerKey.currentState.close();
-                    ListPositon event = ListPositon(false, 500);
-                    Event.eventBus.fire(event);
+                    Event.eventBus.fire(InnerDrawerStatus(0));
+                    Event.eventBus.fire(ListPositon(1, 5));
                   },
                 ),
-                SizedBox(width: 2, height: 10),
                 ElevatedButton(
-                  child: Text("jump to 1000"),
+                  child: Text("JumpTo 10"),
                   onPressed: () {
-                    // direction is optional
-                    // if not set, the last direction will be used
-                    innerDrawerKey.currentState.close();
-                    ListPositon event = ListPositon(false, 1000);
-                    Event.eventBus.fire(event);
+                    Event.eventBus.fire(InnerDrawerStatus(0));
+                    Event.eventBus.fire(ListPositon(1, 10));
                   },
                 ),
               ],
+              // mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              // mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
             ),
             Row(
               children: [
                 ElevatedButton(
-                  child: Text("jump to 100"),
+                  child: Text("JumpTo 100"),
                   onPressed: () {
-                    // direction is optional
-                    // if not set, the last direction will be used
-                    innerDrawerKey.currentState.close();
-
-                    ListPositon event = ListPositon(false, 100);
-                    Event.eventBus.fire(event);
+                    Event.eventBus.fire(InnerDrawerStatus(0));
+                    Event.eventBus.fire(ListPositon(1, 100));
+                  },
+                ),
+                ElevatedButton(
+                  child: Text("JumpTo 1000"),
+                  onPressed: () {
+                    Event.eventBus.fire(InnerDrawerStatus(0));
+                    Event.eventBus.fire(ListPositon(1, 1000));
                   },
                 ),
                 SizedBox(width: 2, height: 10),
                 ElevatedButton(
-                  child: Text("jump to 500"),
+                  child: Text("JumpTo 5000"),
                   onPressed: () {
-                    // direction is optional
-                    // if not set, the last direction will be used
-                    innerDrawerKey.currentState.close();
-                    ListPositon event = ListPositon(false, 500);
-                    Event.eventBus.fire(event);
-                  },
-                ),
-                SizedBox(width: 2, height: 10),
-                ElevatedButton(
-                  child: Text("jump to 1000"),
-                  onPressed: () {
-                    // direction is optional
-                    // if not set, the last direction will be used
-                    innerDrawerKey.currentState.close();
-                    ListPositon event = ListPositon(false, 1000);
-                    Event.eventBus.fire(event);
+                    Event.eventBus.fire(InnerDrawerStatus(0));
+                    Event.eventBus.fire(ListPositon(1, 5000));
                   },
                 ),
               ],
+              // mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              // mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
             ),
           ],
         ),

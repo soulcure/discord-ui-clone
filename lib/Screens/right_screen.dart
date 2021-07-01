@@ -1,12 +1,8 @@
 import 'dart:ui';
-import 'package:discord_ui_clone/widgets/inner_drawer.dart';
+import 'package:discord_ui_clone/utils/event_bus.dart';
 import 'package:flutter/material.dart';
 
 class RightScreen extends StatelessWidget {
-  final GlobalKey<InnerDrawerState> innerDrawerKey;
-
-  RightScreen({this.innerDrawerKey, Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     print("build right");
@@ -45,9 +41,7 @@ class RightScreen extends StatelessWidget {
             ElevatedButton(
               child: Text("close"),
               onPressed: () {
-                // direction is optional
-                // if not set, the last direction will be used
-                innerDrawerKey.currentState.close();
+                Event.eventBus.fire(InnerDrawerStatus(0));
               },
             ),
             Container(

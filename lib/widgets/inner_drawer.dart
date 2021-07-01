@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:discord_ui_clone/utils/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -65,6 +68,7 @@ class InnerDrawerState extends State<InnerDrawer>
   InnerDrawerDirection _position = InnerDrawerDirection.start;
 
   AnimationController _controller;
+  StreamSubscription _subscription;
 
   @override
   void initState() {
@@ -76,12 +80,22 @@ class InnerDrawerState extends State<InnerDrawer>
       ..addListener(_animationChanged)
       ..addStatusListener(_animationStatusChanged);
 
+    _subscription = Event.eventBus.on<InnerDrawerStatus>().listen((event) {
+      // Print the runtime type. Such a set up could be used for logging.
+      if (event.status == 0) {
+        close();
+      } else {
+        open();
+      }
+    });
+
     super.initState();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _subscription.cancel();
     super.dispose();
   }
 

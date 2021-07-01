@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:math';
 import 'package:discord_ui_clone/utils/event_bus.dart';
 import 'package:flutter/material.dart';
@@ -64,17 +65,16 @@ class _ScrollablePositionedListPageState
   List<double> itemHeights;
   List<Color> itemColors;
   bool reversed = false;
+  StreamSubscription _subscription;
 
   /// The alignment to be used next time the user scrolls or jumps to an item.
   double alignment = 0;
 
   @override
   void initState() {
-    super.initState();
-
-    Event.eventBus.on<ListPositon>().listen((event) {
+    _subscription = Event.eventBus.on<ListPositon>().listen((event) {
       // Print the runtime type. Such a set up could be used for logging.
-      if (event.isScroll) {
+      if (event.type == 0) {
         scrollTo(event.positon);
       } else {
         jumpTo(event.positon);
@@ -93,6 +93,14 @@ class _ScrollablePositionedListPageState
             minItemHeight);
     itemColors = List<Color>.generate(numberOfItems,
         (int _) => Color(colorGenerator.nextInt(randomMax)).withOpacity(1));
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 
   @override
