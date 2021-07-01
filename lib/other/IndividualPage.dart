@@ -2,8 +2,8 @@
 // import 'package:chatapp/CustomUI/CameraUI.dart';
 import 'package:discord_ui_clone/app/data/chat_model.dart';
 import 'package:discord_ui_clone/app/data/message_model.dart';
-import 'package:discord_ui_clone/View/OwnMessgaeCrad.dart';
-import 'package:discord_ui_clone/View/ReplyCard.dart';
+import 'package:discord_ui_clone/views/OwnMessgaeCrad.dart';
+import 'package:discord_ui_clone/views/ReplyCard.dart';
 import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

@@ -1,6 +1,6 @@
 import 'package:discord_ui_clone/app/data/chat_model.dart';
-import 'package:discord_ui_clone/View/AvtarCard.dart';
-import 'package:discord_ui_clone/View/ContactCard.dart';
+import 'package:discord_ui_clone/views/AvtarCard.dart';
+import 'package:discord_ui_clone/views/ContactCard.dart';
 import 'package:flutter/material.dart';
 
 class CreateGroup extends StatefulWidget {

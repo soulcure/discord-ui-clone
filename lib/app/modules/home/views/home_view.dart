@@ -31,12 +31,14 @@ class HomeView extends GetView<HomeController> {
             ),
           ),
           bottomNavigationBar: ScrollBottomNavigationBar(
-            unselectedItemColor: Colors.black,
-            selectedItemColor: Colors.redAccent,
             onTap: controller.changeTabIndex,
             currentIndex: controller.tabIndex,
             showSelectedLabels: true,
-            showUnselectedLabels: false,
+            showUnselectedLabels: true,
+            unselectedItemColor: Colors.black,
+            selectedItemColor: Colors.redAccent,
+            selectedFontSize: 12,
+            unselectedFontSize: 12,
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.white,
             items: [

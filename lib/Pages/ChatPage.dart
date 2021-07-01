@@ -1,5 +1,5 @@
 import 'package:discord_ui_clone/app/data/chat_model.dart';
-import 'package:discord_ui_clone/View/CustomCard.dart';
+import 'package:discord_ui_clone/views/CustomCard.dart';
 import 'package:discord_ui_clone/other/SelectContact.dart';
 import 'package:flutter/material.dart';
 

@@ -1,5 +1,5 @@
 import 'package:discord_ui_clone/app/data/chat_model.dart';
-import 'package:discord_ui_clone/View/ButtonCard.dart';
+import 'package:discord_ui_clone/views/ButtonCard.dart';
 import 'package:flutter/material.dart';
 
 import 'Homescreen.dart';
