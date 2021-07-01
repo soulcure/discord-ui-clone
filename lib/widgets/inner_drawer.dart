@@ -29,13 +29,10 @@ const double velocity = 20;
 
 class InnerDrawer extends StatefulWidget {
   const InnerDrawer(
-      {GlobalKey key,
+      {Key key,
       @required this.leftChild,
       @required this.rightChild,
-      @required this.scaffold,
-      this.onTapClose = false,
-      this.tapScaffoldEnabled = false,
-      this.innerDrawerCallback})
+      @required this.scaffold})
       : super(key: key);
 
   /// Left child
@@ -46,15 +43,6 @@ class InnerDrawer extends StatefulWidget {
 
   /// A Scaffold is generally used but you are free to use other widgets
   final Widget scaffold;
-
-  /// Closes the open scaffold
-  final bool tapScaffoldEnabled;
-
-  /// Closes the open scaffold
-  final bool onTapClose;
-
-  /// Optional callback that is called when a [InnerDrawer] is open or closed.
-  final InnerDrawerCallback innerDrawerCallback;
 
   @override
   InnerDrawerState createState() => InnerDrawerState();
@@ -69,6 +57,36 @@ class InnerDrawerState extends State<InnerDrawer>
 
   AnimationController _controller;
   StreamSubscription _subscription;
+
+  bool isRightToLeft;
+  bool isLeftToRight;
+  bool isCallBack;
+
+  void show() {
+    Event.eventBus.fire(NavBarStatus(0));
+  }
+
+  void hide() {
+    Event.eventBus.fire(NavBarStatus(1));
+  }
+
+  void open({InnerDrawerDirection direction}) {
+    if (direction != null) _position = direction;
+    _controller.fling(velocity: -velocity);
+  }
+
+  void openLeft() {
+    open(direction: InnerDrawerDirection.start);
+  }
+
+  void openRight() {
+    open(direction: InnerDrawerDirection.end);
+  }
+
+  void close({InnerDrawerDirection direction}) {
+    if (direction != null) _position = direction;
+    _controller.fling(velocity: velocity);
+  }
 
   @override
   void initState() {
@@ -129,49 +147,52 @@ class InnerDrawerState extends State<InnerDrawer>
   }
 
   void _animationChanged() {
-    setState(() {
-      // The animation controller's state is our build state, and it changed already.
-    });
+    setState(() {});
+    if (!isCallBack) _callback();
   }
 
   void _animationStatusChanged(AnimationStatus status) {
-    print("yao _animationStatusChanged status=$status");
     switch (status) {
       case AnimationStatus.reverse:
-        callback();
+        if (_position == InnerDrawerDirection.start) {
+          if (isLeftToRight) {
+            return;
+          }
+          isRightToLeft = true;
+        }
         break;
       case AnimationStatus.forward:
-        callback();
+        if (_position == InnerDrawerDirection.start) {
+          if (isRightToLeft) {
+            return;
+          }
+          isLeftToRight = true;
+        }
         break;
       case AnimationStatus.dismissed:
-        callback();
+        show();
+        isRightToLeft = false;
+        isLeftToRight = false;
+        isCallBack = false;
         break;
       case AnimationStatus.completed:
-        callback();
+        hide();
+        isRightToLeft = false;
+        isLeftToRight = false;
+        isCallBack = false;
         break;
     }
   }
 
-  void callback() {
-    if (widget.innerDrawerCallback != null &&
-        _position == InnerDrawerDirection.start) {
-      if (_controller.value == offset) {
+  void _callback() {
+    if (_position == InnerDrawerDirection.start) {
+      if (isLeftToRight && _controller.value < 0.8) {
         show();
-      } else {
+        isCallBack = true;
+      } else if (isRightToLeft && _controller.value > 0.2) {
         hide();
+        isCallBack = true;
       }
-    }
-  }
-
-  void hide() {
-    if (widget.innerDrawerCallback != null) {
-      widget.innerDrawerCallback(0);
-    }
-  }
-
-  void show() {
-    if (widget.innerDrawerCallback != null) {
-      widget.innerDrawerCallback(1);
     }
   }
 
@@ -217,24 +238,6 @@ class InnerDrawerState extends State<InnerDrawer>
 
   double get _width {
     return _initWidth;
-  }
-
-  void open({InnerDrawerDirection direction}) {
-    if (direction != null) _position = direction;
-    _controller.fling(velocity: -velocity);
-  }
-
-  void openLeft() {
-    open(direction: InnerDrawerDirection.start);
-  }
-
-  void openRight() {
-    open(direction: InnerDrawerDirection.end);
-  }
-
-  void close({InnerDrawerDirection direction}) {
-    if (direction != null) _position = direction;
-    _controller.fling(velocity: velocity);
   }
 
   /// Outer Alignment

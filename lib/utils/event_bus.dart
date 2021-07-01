@@ -13,6 +13,12 @@ class InnerDrawerStatus {
   InnerDrawerStatus(this.status);
 }
 
+class NavBarStatus {
+  final int status; //0 show ,1 hide
+
+  NavBarStatus(this.status);
+}
+
 class Event {
   static final EventBus eventBus = EventBus();
 

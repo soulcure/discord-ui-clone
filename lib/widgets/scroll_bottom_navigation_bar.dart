@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:discord_ui_clone/utils/event_bus.dart';
 import 'package:flutter/material.dart';
 
 class ScrollBottomNavigationBar extends StatefulWidget {
@@ -55,21 +58,7 @@ class ScrollBottomNavigationBarState extends State<ScrollBottomNavigationBar>
   final tabNotifier = ValueNotifier<int>(0);
 
   AnimationController _controller;
-
-  void show() {
-    if (!_controller.isAnimating) {
-      _controller.reverse();
-    }
-  }
-
-  void hide() {
-    if (!_controller.isAnimating) {
-      _controller.forward();
-    }
-  }
-
-  /// Set a new tab
-  void setTab(int index) => tabNotifier.value = index;
+  StreamSubscription _subscription;
 
   @override
   void initState() {
@@ -83,6 +72,15 @@ class ScrollBottomNavigationBarState extends State<ScrollBottomNavigationBar>
           // The animation controller's state is our build state, and it changed already.
         });
       });
+
+    _subscription = Event.eventBus.on<NavBarStatus>().listen((event) {
+      // Print the runtime type. Such a set up could be used for logging.
+      if (event.status == 0) {
+        show();
+      } else {
+        hide();
+      }
+    });
     super.initState();
   }
 
@@ -90,6 +88,7 @@ class ScrollBottomNavigationBarState extends State<ScrollBottomNavigationBar>
   void dispose() {
     tabNotifier.dispose();
     _controller.dispose();
+    _subscription.cancel();
     super.dispose();
   }
 
@@ -106,6 +105,21 @@ class ScrollBottomNavigationBarState extends State<ScrollBottomNavigationBar>
       builder: _tab,
     );
   }
+
+  void show() {
+    if (!_controller.isAnimating) {
+      _controller.reverse();
+    }
+  }
+
+  void hide() {
+    if (!_controller.isAnimating) {
+      _controller.forward();
+    }
+  }
+
+  /// Set a new tab
+  void setTab(int index) => tabNotifier.value = index;
 
   Widget _tab(BuildContext context, int index, Widget child) {
     Widget bottomNavigationBar = BottomNavigationBar(
