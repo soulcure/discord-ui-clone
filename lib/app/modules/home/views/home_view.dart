@@ -33,26 +33,34 @@ class HomeView extends GetView<HomeController> {
           bottomNavigationBar: ScrollBottomNavigationBar(
             onTap: controller.changeTabIndex,
             currentIndex: controller.tabIndex,
-            showSelectedLabels: true,
-            showUnselectedLabels: true,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
             unselectedItemColor: Colors.black,
-            selectedItemColor: Colors.redAccent,
+            selectedItemColor: Colors.white,
             selectedFontSize: 12,
             unselectedFontSize: 12,
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.white,
             items: [
               _bottomNavigationBarItem(
-                icon: CupertinoIcons.home,
+                icon: Icons.home,
                 label: 'Home',
               ),
               _bottomNavigationBarItem(
-                icon: CupertinoIcons.sportscourt,
+                icon: Icons.favorite,
                 label: 'News',
               ),
               _bottomNavigationBarItem(
-                icon: CupertinoIcons.person,
+                icon: Icons.search,
                 label: 'Account',
+              ),
+              _bottomNavigationBarItem(
+                icon: Icons.attach_email,
+                label: 'Account',
+              ),
+              _bottomNavigationBarItem(
+                icon: Icons.settings,
+                label: 'settings',
               ),
             ],
           ),
