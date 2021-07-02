@@ -5,8 +5,15 @@ import 'package:discord_ui_clone/utils/http.dart';
 import 'package:flutter/material.dart';
 
 class LeftScreen extends StatelessWidget {
-  test() async {
-    List<GithubRepo> test = await HttpClient().getGitHub();
+  testCompute() async {
+    List<GithubRepo> test = await HttpClient().getGitHub1();
+
+    test.forEach((element) => print("yao e=$element"));
+    print(test);
+  }
+
+  testMain() async {
+    List<GithubRepo> test = await HttpClient().getGitHub2();
 
     test.forEach((element) => print("yao e=$element"));
     print(test);
@@ -67,9 +74,15 @@ class LeftScreen extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-              child: Text("test"),
+              child: Text("test compute"),
               onPressed: () {
-                test();
+                testCompute();
+              },
+            ),
+            ElevatedButton(
+              child: Text("test main"),
+              onPressed: () {
+                testMain();
               },
             ),
             Row(
