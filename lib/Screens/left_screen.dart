@@ -1,8 +1,17 @@
 import 'dart:ui';
 import 'package:discord_ui_clone/utils/event_bus.dart';
+import 'package:discord_ui_clone/utils/github_repo.dart';
+import 'package:discord_ui_clone/utils/http.dart';
 import 'package:flutter/material.dart';
 
 class LeftScreen extends StatelessWidget {
+  test() async {
+    List<GithubRepo> test = await HttpClient().getGitHub();
+
+    test.forEach((element) => print("yao e=$element"));
+    print(test);
+  }
+
   @override
   Widget build(BuildContext context) {
     print("build left");
@@ -58,9 +67,9 @@ class LeftScreen extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-              child: Text("close"),
+              child: Text("test"),
               onPressed: () {
-                Event.eventBus.fire(InnerDrawerStatus(0));
+                test();
               },
             ),
             Row(
