@@ -29,6 +29,6 @@ class GithubRepo {
 
   @override
   String toString() {
-    return fullName;
+    return "name=$name fullName=$fullName archiveUrl=$archiveUrl";
   }
 }
