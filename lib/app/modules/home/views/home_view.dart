@@ -35,12 +35,12 @@ class HomeView extends GetView<HomeController> {
             currentIndex: controller.tabIndex,
             showSelectedLabels: false,
             showUnselectedLabels: false,
-            unselectedItemColor: Colors.black,
+            unselectedItemColor: Colors.white70,
             selectedItemColor: Colors.white,
             selectedFontSize: 12,
             unselectedFontSize: 12,
             type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.black54,
             items: [
               _bottomNavigationBarItem(
                 icon: Icons.home,
