@@ -2,8 +2,10 @@ import 'dart:ui';
 import 'package:discord_ui_clone/utils/event_bus.dart';
 import 'package:discord_ui_clone/utils/github_repo.dart';
 import 'package:discord_ui_clone/utils/http.dart';
-import 'package:discord_ui_clone/widgets/guild_list.dart';
+import 'package:discord_ui_clone/widgets/guild/controllers/guild_controller.dart';
+import 'package:discord_ui_clone/widgets/guild/views/guild_listview.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LeftScreen extends StatelessWidget {
   testCompute() async {
@@ -33,7 +35,7 @@ class LeftScreen extends StatelessWidget {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                  color: Colors.blueGrey,
+                  color: Colors.grey[850],
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(5.0),
                       topRight: Radius.circular(5.0))),
@@ -84,7 +86,8 @@ class LeftScreen extends StatelessWidget {
                   ElevatedButton(
                     child: Text("test compute"),
                     onPressed: () {
-                      testCompute();
+                      GuildController controller = Get.find();
+                      controller.reqIndex();
                     },
                   ),
                   ElevatedButton(
