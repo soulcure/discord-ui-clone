@@ -14,16 +14,10 @@ parseJson(String text) {
 }
 
 class HttpClient {
-  static final HttpClient _singleton = HttpClient._internal();
-
-  static const String host = "https://api.github.com";
-  static const String repos = "/orgs/flutterchina/repos";
-
-  Dio _dio;
-
   factory HttpClient() {
     return _singleton;
   }
+
   HttpClient._internal() {
     _dio = Dio();
     _dio.interceptors.add(LogInterceptor());
@@ -35,6 +29,13 @@ class HttpClient {
       ..receiveTimeout = 5000
       ..connectTimeout = 5000; //连接超时改为5秒
   }
+
+  static const String host = "https://api.github.com";
+  static const String repos = "/orgs/flutterchina/repos";
+
+  static final HttpClient _singleton = HttpClient._internal();
+
+  Dio _dio;
 
   Future<List<GithubRepo>> getGitHub1() async {
     final start = DateTime.now();
