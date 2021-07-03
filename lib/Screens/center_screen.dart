@@ -7,19 +7,23 @@ class CenterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     print("CenterScreen build");
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.menu,
-            size: 28,
-            color: Colors.deepOrange,
-          ),
-          onPressed: () {},
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.blueGrey,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(5.0), topRight: Radius.circular(5.0))),
+      child: Center(
+        child: Column(
+          children: <Widget>[
+            Text("111"),
+            Text("111"),
+            Text("111"),
+            Expanded(
+              child: ScrollablePositionedListPage(),
+            ),
+          ],
         ),
-        title: Text("chat view"),
       ),
-      body: ScrollablePositionedListPage(),
     );
   }
 }

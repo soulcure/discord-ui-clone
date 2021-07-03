@@ -1,18 +1,21 @@
 import 'package:flutter/widgets.dart';
 
-class GuildListViewController extends StatefulWidget {
-  GuildListViewController({Key key}) : super(key: key);
+class GuildListView extends StatefulWidget {
+  GuildListView({Key key}) : super(key: key);
 
   @override
-  _GuildListViewControllerState createState() =>
-      _GuildListViewControllerState();
+  _GuildListViewState createState() => _GuildListViewState();
 }
 
-class _GuildListViewControllerState extends State<GuildListViewController> {
+class _GuildListViewState extends State<GuildListView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ListView.builder(itemBuilder: itemBuilder),
+      child: ListView.builder(
+          itemCount: 100,
+          itemBuilder: (BuildContext context, int index) {
+            return Text("index $index");
+          }),
     );
   }
 }
