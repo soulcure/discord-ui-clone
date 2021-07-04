@@ -58,9 +58,9 @@ class InnerDrawerState extends State<InnerDrawer>
   AnimationController _controller;
   StreamSubscription _subscription;
 
-  bool isRightToLeft;
-  bool isLeftToRight;
-  bool isCallBack;
+  bool isRightToLeft = false;
+  bool isLeftToRight = false;
+  bool isCallBack = false;
 
   void show() {
     Event.eventBus.fire(NavBarStatus(0));
