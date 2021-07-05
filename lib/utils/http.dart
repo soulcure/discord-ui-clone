@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:discord_ui_clone/utils/github_repo.dart';
+import 'package:discord_ui_clone/widgets/guild/model/github_user_bean.dart';
 import 'package:flutter/foundation.dart';
 
 // Must be top-level function
@@ -32,6 +33,8 @@ class HttpClient {
 
   static const String host = "https://api.github.com";
   static const String repos = "/orgs/flutterchina/repos";
+
+  static const String users = "/users";
 
   static final HttpClient _singleton = HttpClient._internal();
 
@@ -64,5 +67,23 @@ class HttpClient {
 
     debugPrint("yao used main time=$used");
     return Future.value(list);
+  }
+
+  Future<List<Githubuserbean>> getGitHubUser() async {
+    final start = DateTime.now();
+    (_dio.transformer as DefaultTransformer).jsonDecodeCallback = null;
+    try {
+      var response = await _dio.get(users);
+      final data = response.data as List;
+      List<Githubuserbean> list =
+          data.map((e) => Githubuserbean.fromMap(e)).toList();
+      final used = DateTime.now().difference(start).inMilliseconds;
+
+      debugPrint("yao used main time=$used");
+      return Future.value(list);
+    } catch (e) {
+      print(e);
+      return Future.value(null);
+    }
   }
 }

@@ -1,17 +1,14 @@
-import 'package:discord_ui_clone/widgets/guild/model/guild_bean.dart';
+import 'package:discord_ui_clone/utils/http.dart';
+import 'package:discord_ui_clone/widgets/guild/model/github_user_bean.dart';
 import 'package:get/get.dart';
 
 class GuildController extends GetxController {
-  // List<GuildBean> guildList;
-  int index = 1;
+  List<Githubuserbean> _guildList;
 
-  // void reqGuild() {
-  //   guildList = [];
-  //   update();
-  // }
+  get guildList => _guildList == null ? [] : _guildList;
 
-  void reqIndex() {
-    index++;
+  Future<void> reqGithubUserList() async {
+    _guildList = await HttpClient().getGitHubUser();
     update();
   }
 }

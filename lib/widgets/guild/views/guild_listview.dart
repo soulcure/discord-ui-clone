@@ -1,22 +1,47 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:discord_ui_clone/widgets/guild/controllers/guild_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
-class GuildListView extends StatelessWidget {
+class GuildListView extends StatefulWidget {
   GuildListView({Key key}) : super(key: key);
 
-  final GuildController controller = Get.put(GuildController());
+  @override
+  _GuildListViewState createState() => _GuildListViewState();
+}
+
+class _GuildListViewState extends State<GuildListView> {
+  final GuildController guildController = Get.put(GuildController());
+  @override
+  void initState() {
+    guildController.reqGithubUserList();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<GuildController>(
-      builder: (controller) {
-        return ListView.builder(
-            itemCount: controller.index,
-            itemBuilder: (BuildContext context, int index) {
-              return Text("index $index");
-            });
-      },
+      builder: (_c) => ListView.builder(
+          itemCount: _c.guildList.length,
+          itemBuilder: (context, index) {
+            return CachedNetworkImage(
+              imageUrl: _c.guildList[index].avatarUrl,
+              placeholder: (context, url) {
+                return Center(
+                  widthFactor: 10,
+                  heightFactor: 10,
+                  child: CircularProgressIndicator(),
+                );
+              },
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            );
+          }),
     );
   }
 }

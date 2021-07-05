@@ -87,7 +87,7 @@ class LeftScreen extends StatelessWidget {
                     child: Text("test compute"),
                     onPressed: () {
                       GuildController controller = Get.find();
-                      controller.reqIndex();
+                      controller.reqGithubUserList();
                     },
                   ),
                   ElevatedButton(
