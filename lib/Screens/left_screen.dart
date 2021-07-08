@@ -29,10 +29,11 @@ class LeftScreen extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Expanded(
-            child: GuildListView(),
             flex: 1,
+            child: GuildListView(),
           ),
           Expanded(
+            flex: 4,
             child: Container(
               decoration: BoxDecoration(
                   color: Colors.grey[850],
@@ -231,7 +232,6 @@ class LeftScreen extends StatelessWidget {
                 ],
               ),
             ),
-            flex: 4,
           ),
         ],
       ),

@@ -15,7 +15,7 @@ class GuildListView extends StatefulWidget {
 class _GuildListViewState extends State<GuildListView> {
   final GuildController guildController = Get.put(GuildController());
 
-  static const double size = 50;
+  //static const double size = 40;
   int selectedIndex;
 
   @override
@@ -43,27 +43,32 @@ class _GuildListViewState extends State<GuildListView> {
                   selectedIndex = index;
                 });
               },
-              child: Container(
-                width: size,
-                height: size,
-                padding: EdgeInsets.only(top: 5.0),
-                decoration: selectedIndex == index
-                    ? BoxDecoration(
-                        border: Border.all(width: 5, color: Colors.blue),
-                        borderRadius: BorderRadius.circular(size / 2))
-                    : null,
-                child: ClipOval(
-                  child: CachedNetworkImage(
-                    imageUrl: item.avatarUrl,
-                    placeholder: (context, url) {
-                      return Center(
-                        widthFactor: 10,
-                        heightFactor: 10,
-                        child: CircularProgressIndicator(),
-                      );
-                    },
-                    errorWidget: (context, url, error) => Icon(Icons.error),
-                  ),
+              child: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                    final width = constraints.constrainWidth();
+                    return AnimatedContainer(
+                      duration: Duration(milliseconds: 20),
+                      decoration: selectedIndex == index
+                          ? BoxDecoration(
+                              border: Border.all(width: 2, color: Colors.blue),
+                              borderRadius: BorderRadius.circular(width / 2))
+                          : null,
+                      child: ClipOval(
+                        child: CachedNetworkImage(
+                          imageUrl: item.avatarUrl,
+                          placeholder: (context, url) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          },
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             );
