@@ -86,4 +86,25 @@ class HttpClient {
       return Future.value(null);
     }
   }
+
+  Future<List<String>> getGitHubUserGrid() async {
+    final start = DateTime.now();
+    (_dio.transformer as DefaultTransformer).jsonDecodeCallback = parseJson;
+    try {
+      var response = await _dio.get(users);
+      final data = response.data as List;
+      List<Githubuserbean> list =
+          data.map((e) => Githubuserbean.fromMap(e)).toList();
+      final used = DateTime.now().difference(start).inMilliseconds;
+
+      debugPrint("yao used main time=$used");
+
+      List<String> res = list.map((e) => e.avatarUrl).toList();
+
+      return Future.value(res);
+    } catch (e) {
+      print(e);
+      return Future.value(null);
+    }
+  }
 }

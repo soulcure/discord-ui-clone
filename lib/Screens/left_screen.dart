@@ -3,6 +3,7 @@ import 'package:discord_ui_clone/utils/event_bus.dart';
 import 'package:discord_ui_clone/utils/github_repo.dart';
 import 'package:discord_ui_clone/utils/http.dart';
 import 'package:discord_ui_clone/widgets/guild/controllers/guild_controller.dart';
+import 'package:discord_ui_clone/widgets/guild/views/group_icon_view.dart';
 import 'package:discord_ui_clone/widgets/guild/views/guild_listview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,36 +43,11 @@ class LeftScreen extends StatelessWidget {
                       topRight: Radius.circular(5.0))),
               child: Column(
                 children: <Widget>[
-                  ListTile(
-                    onTap: () => print("Dashboard"),
-                    title: Text(
-                      "Dashboard",
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                    leading: Icon(
-                      Icons.dashboard,
-                      color: Colors.white,
-                      size: 22,
-                    ),
-                  ),
-                  ListTile(
-                    title: Text(
-                      "Nametag",
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    leading: Icon(
-                      Icons.rounded_corner,
-                      size: 22,
-                    ),
-                  ),
-                  ListTile(
-                    title: Text(
-                      "Favorite",
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    leading: Icon(
-                      Icons.bookmark_border,
-                      size: 22,
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: GroupIconView(),
                     ),
                   ),
                   ListTile(
