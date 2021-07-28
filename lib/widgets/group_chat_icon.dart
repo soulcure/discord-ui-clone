@@ -19,39 +19,44 @@ class WeChatGroupChatIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var childCount = avatars.length;
+    var childCount = avatars.length >= 9 ? 9 : avatars.length;
     var columnMax;
     List<Widget> icons = [];
     List<Widget> stacks = [];
+
+    row = 0;
+    column = 0;
+
     // 五张图片之后（包含5张），每行的最大列数是3
     var imgWidth;
-
-    if (childCount < 2) {
+    if (childCount == 0) {
       return Container(
         width: AppDimens.ChatItemImageDimens,
         height: AppDimens.ChatItemImageDimens,
         color: Colors.grey,
       );
-    }
-
-    if (childCount >= 5) {
-      columnMax = 3;
-      imgWidth = (AppDimens.ChatItemImageDimens -
-              (AppDimens.ChatItemGroupIconPaddingDimes * columnMax) -
-              AppDimens.ChatItemGroupChildIconMarginDimes) /
-          columnMax;
-    } else {
+    } else if (childCount == 1) {
+      columnMax = 1;
+      imgWidth = AppDimens.ChatItemImageDimens -
+          AppDimens.ChatItemGroupIconPaddingDimes * 2;
+    } else if (childCount > 1 && childCount < 5) {
       columnMax = 2;
       imgWidth = (AppDimens.ChatItemImageDimens -
               (AppDimens.ChatItemGroupIconPaddingDimes * columnMax) -
               AppDimens.ChatItemGroupChildIconMarginDimes) /
           columnMax;
+    } else if (childCount >= 5) {
+      columnMax = 3;
+      imgWidth = (AppDimens.ChatItemImageDimens -
+              (AppDimens.ChatItemGroupIconPaddingDimes * columnMax) -
+              AppDimens.ChatItemGroupChildIconMarginDimes) /
+          columnMax;
     }
+
     for (var i = 0; i < childCount; i++) {
       icons.add(_weChatGroupChatChildIcon(avatars[i], imgWidth));
     }
-    row = 0;
-    column = 0;
+
     var centerTop = 0.0;
     if (childCount == 2 || childCount == 5 || childCount == 6) {
       centerTop = imgWidth / 2;
