@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class GuildListView extends StatefulWidget {
-  GuildListView({Key key}) : super(key: key);
+  const GuildListView({Key key}) : super(key: key);
 
   @override
   _GuildListViewState createState() => _GuildListViewState();
@@ -32,10 +32,10 @@ class _GuildListViewState extends State<GuildListView> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<GuildController>(
-      builder: (_c) => ListView.builder(
-          padding: EdgeInsets.only(top: 5.0),
+      builder: (GuildController _c) => ListView.builder(
+          padding: const EdgeInsets.only(top: 5.0),
           itemCount: _c.guildList.length,
-          itemBuilder: (context, index) {
+          itemBuilder: (BuildContext context, int index) {
             final Githubuserbean item = _c.guildList[index];
             return GestureDetector(
               onTap: () {
@@ -47,9 +47,9 @@ class _GuildListViewState extends State<GuildListView> {
                 padding: const EdgeInsets.all(2.0),
                 child: LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
-                    final width = constraints.constrainWidth();
+                    final double width = constraints.constrainWidth();
                     return AnimatedContainer(
-                      duration: Duration(milliseconds: 20),
+                      duration: const Duration(milliseconds: 20),
                       decoration: selectedIndex == index
                           ? BoxDecoration(
                               border: Border.all(width: 2, color: Colors.blue),
@@ -58,13 +58,14 @@ class _GuildListViewState extends State<GuildListView> {
                       child: ClipOval(
                         child: CachedNetworkImage(
                           imageUrl: item.avatarUrl,
-                          placeholder: (context, url) {
-                            return Center(
+                          placeholder: (BuildContext context, String url) {
+                            return const Center(
                               child: CircularProgressIndicator(),
                             );
                           },
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
+                          errorWidget: (BuildContext context, String url,
+                                  dynamic error) =>
+                              const Icon(Icons.error),
                         ),
                       ),
                     );

@@ -6,14 +6,14 @@ class GuildController extends GetxController {
   List<Githubuserbean> _guildList;
   List<String> _avatars;
 
-  get guildList => _guildList == null ? [] : _guildList;
-  get avatars {
+  List<Githubuserbean> get guildList => _guildList ?? <Githubuserbean>[];
+
+  List<String> get avatars {
     if (_avatars == null) {
-      return [];
+      return <String>[];
     } else if (_avatars.length <= 9) {
       return _avatars;
     } else {
-      //return _avatars.sublist(0, 9);
       return _avatars.sublist(0, 9);
     }
   }

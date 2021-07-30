@@ -2,33 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class AppDimens {
-  static const ChatItemImageDimens = 44.0;
+  static const double ChatItemImageDimens = 44.0;
 
-  static const ChatItemGroupIconPaddingDimes = 2.0;
-  static const ChatItemGroupChildIconMarginDimes = 2.0;
+  static const double ChatItemGroupIconPaddingDimes = 2.0;
+  static const double ChatItemGroupChildIconMarginDimes = 2.0;
 }
 
-var row = 0, column = 0;
+int row = 0, column = 0;
 
 // 群聊九宫格头像
 class WeChatGroupChatIcon extends StatelessWidget {
-  WeChatGroupChatIcon({Key key, @required this.avatars})
+  const WeChatGroupChatIcon({Key key, @required this.avatars})
       : assert(avatars != null),
         super(key: key);
   final List<String> avatars;
 
   @override
   Widget build(BuildContext context) {
-    var childCount = avatars.length >= 9 ? 9 : avatars.length;
-    var columnMax;
-    List<Widget> icons = [];
-    List<Widget> stacks = [];
+    final int childCount = avatars.length >= 9 ? 9 : avatars.length;
+    int columnMax;
+
+    final List<Widget> icons = <Widget>[];
+    final List<Widget> stacks = <Widget>[];
 
     row = 0;
     column = 0;
 
     // 五张图片之后（包含5张），每行的最大列数是3
-    var imgWidth;
+    double imgWidth;
     if (childCount == 0) {
       return Container(
         width: AppDimens.ChatItemImageDimens,
@@ -53,18 +54,18 @@ class WeChatGroupChatIcon extends StatelessWidget {
           columnMax;
     }
 
-    for (var i = 0; i < childCount; i++) {
+    for (int i = 0; i < childCount; i++) {
       icons.add(_weChatGroupChatChildIcon(avatars[i], imgWidth));
     }
 
-    var centerTop = 0.0;
+    double centerTop = 0.0;
     if (childCount == 2 || childCount == 5 || childCount == 6) {
       centerTop = imgWidth / 2;
     }
-    for (var i = 0; i < childCount; i++) {
-      var left =
+    for (int i = 0; i < childCount; i++) {
+      final double left =
           imgWidth * row + AppDimens.ChatItemGroupIconPaddingDimes * (row + 1);
-      var top = imgWidth * column +
+      final double top = imgWidth * column +
           AppDimens.ChatItemGroupIconPaddingDimes * column +
           centerTop;
       switch (childCount) {
@@ -86,7 +87,7 @@ class WeChatGroupChatIcon extends StatelessWidget {
       width: AppDimens.ChatItemImageDimens,
       height: AppDimens.ChatItemImageDimens,
       color: Colors.grey,
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         top: AppDimens.ChatItemGroupIconPaddingDimes,
       ),
       alignment: AlignmentDirectional.bottomCenter,
@@ -97,7 +98,7 @@ class WeChatGroupChatIcon extends StatelessWidget {
   }
 }
 
-_weChatGroupChatChildIcon(String avatar, double width) {
+Image _weChatGroupChatChildIcon(String avatar, double width) {
   return Image.network(
     avatar,
     height: width,
@@ -107,10 +108,10 @@ _weChatGroupChatChildIcon(String avatar, double width) {
 }
 
 // 顶部为一张图片
-_topOneIcon(
-    List<Widget> stacks, Widget child, int childCount, i, imgWidth, left, top) {
+void _topOneIcon(List<Widget> stacks, Widget child, int childCount, int i,
+    double imgWidth, double left, double top) {
   if (i == 0) {
-    var firstLeft =
+    double firstLeft =
         imgWidth / 2 + left + AppDimens.ChatItemGroupChildIconMarginDimes / 2;
     if (childCount == 7) {
       firstLeft = imgWidth + left + AppDimens.ChatItemGroupChildIconMarginDimes;
@@ -140,8 +141,8 @@ _topOneIcon(
 }
 
 // 顶部为两张图片
-_topTwoIcon(
-    List<Widget> stacks, Widget child, int childCount, i, imgWidth, left, top) {
+void _topTwoIcon(List<Widget> stacks, Widget child, int childCount, int i,
+    double imgWidth, double left, double top) {
   if (i == 0 || i == 1) {
     stacks.add(Positioned(
       child: child,
@@ -172,8 +173,8 @@ _topTwoIcon(
   }
 }
 
-_otherIcon(List<Widget> stacks, Widget child, int childCount, i, imgWidth, left,
-    top, columnMax) {
+void _otherIcon(List<Widget> stacks, Widget child, int childCount, int i,
+    double imgWidth, double left, double top, int columnMax) {
   stacks.add(Positioned(
     child: child,
     left: left,
