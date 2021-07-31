@@ -31,26 +31,28 @@ class GuildListView extends StatelessWidget {
                 child: LayoutBuilder(
                   builder: (context, constraints) {
                     final double width = constraints.constrainWidth();
-                    return AnimatedContainer(
-                      duration: const Duration(milliseconds: 20),
-                      decoration: _c.selectedIndex.value == index
-                          ? BoxDecoration(
-                              border: Border.all(width: 2, color: Colors.blue),
-                              borderRadius: BorderRadius.circular(width / 2))
-                          : null,
-                      child: ClipOval(
-                        child: CachedNetworkImage(
-                          imageUrl: item.avatarUrl,
-                          placeholder: (context, url) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          },
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                        ),
-                      ),
-                    );
+                    return Obx(() => AnimatedContainer(
+                          duration: const Duration(milliseconds: 20),
+                          decoration: _c.selectedIndex.value == index
+                              ? BoxDecoration(
+                                  border:
+                                      Border.all(width: 2, color: Colors.blue),
+                                  borderRadius:
+                                      BorderRadius.circular(width / 2))
+                              : null,
+                          child: ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl: item.avatarUrl,
+                              placeholder: (context, url) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              },
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                            ),
+                          ),
+                        ));
                   },
                 ),
               ),
