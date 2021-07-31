@@ -3,6 +3,8 @@ import 'package:discord_ui_clone/widgets/guild/model/github_user_bean.dart';
 import 'package:get/get.dart';
 
 class GuildController extends GetxController {
+  Rx<int> selectedIndex = Rx<int>(0);
+
   List<Githubuserbean> _guildList;
   List<String> _avatars;
 
@@ -26,5 +28,9 @@ class GuildController extends GetxController {
   Future<void> reqGithubUserGrid() async {
     _avatars = await HttpClient().getGitHubUserGrid();
     update();
+  }
+
+  void select(int index) {
+    selectedIndex.value = index;
   }
 }
