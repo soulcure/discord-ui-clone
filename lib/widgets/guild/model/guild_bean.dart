@@ -1,10 +1,6 @@
 import 'dart:convert';
 
 class GuildBean {
-  int guildId;
-  String url;
-  String guildName;
-  List<ChannelBean> channels;
   GuildBean({
     this.guildId,
     this.url,
@@ -12,14 +8,8 @@ class GuildBean {
     this.channels,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'guildId': guildId,
-      'url': url,
-      'guildName': guildName,
-      'channels': channels.map((x) => x.toMap()).toList(),
-    };
-  }
+  factory GuildBean.fromJson(String source) =>
+      GuildBean.fromMap(json.decode(source));
 
   factory GuildBean.fromMap(Map<String, dynamic> map) {
     return GuildBean(
@@ -31,15 +21,26 @@ class GuildBean {
     );
   }
 
-  String toJson() => json.encode(toMap());
-
-  factory GuildBean.fromJson(String source) =>
-      GuildBean.fromMap(json.decode(source));
+  List<ChannelBean> channels;
+  int guildId;
+  String guildName;
+  String url;
 
   @override
   String toString() {
     return 'GuildBean(guildId: $guildId, url: $url, guildName: $guildName, channels: $channels)';
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'guildId': guildId,
+      'url': url,
+      'guildName': guildName,
+      'channels': channels.map((x) => x.toMap()).toList(),
+    };
+  }
+
+  String toJson() => json.encode(toMap());
 
   GuildBean copyWith({
     int guildId,
@@ -57,22 +58,14 @@ class GuildBean {
 }
 
 class ChannelBean {
-  String channelId;
-  String channelName;
-  int channelType;
   ChannelBean({
     this.channelId,
     this.channelName,
     this.channelType,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'channelId': channelId,
-      'channelName': channelName,
-      'channelType': channelType,
-    };
-  }
+  factory ChannelBean.fromJson(String source) =>
+      ChannelBean.fromMap(json.decode(source));
 
   factory ChannelBean.fromMap(Map<String, dynamic> map) {
     return ChannelBean(
@@ -82,14 +75,23 @@ class ChannelBean {
     );
   }
 
-  String toJson() => json.encode(toMap());
-
-  factory ChannelBean.fromJson(String source) =>
-      ChannelBean.fromMap(json.decode(source));
+  String channelId;
+  String channelName;
+  int channelType;
 
   @override
   String toString() =>
       'ChannelBean(channelId: $channelId, channelName: $channelName, channelType: $channelType)';
+
+  Map<String, dynamic> toMap() {
+    return {
+      'channelId': channelId,
+      'channelName': channelName,
+      'channelType': channelType,
+    };
+  }
+
+  String toJson() => json.encode(toMap());
 
   ChannelBean copyWith({
     String channelId,
