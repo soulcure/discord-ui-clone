@@ -1,16 +1,16 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
+import 'package:discord_ui_clone/utils/data_worker_lsolate.dart';
 import 'package:discord_ui_clone/utils/github_repo.dart';
 import 'package:discord_ui_clone/widgets/guild/model/github_user_bean.dart';
 import 'package:flutter/foundation.dart';
 
 // Must be top-level function
-_parseAndDecode(String response) {
+dynamic _parseAndDecode(String response) {
   return jsonDecode(response);
 }
 
-parseJson(String text) {
+dynamic parseJson(String text) {
   return compute(_parseAndDecode, text);
 }
 
@@ -43,11 +43,13 @@ class HttpClient {
   Future<List<GithubRepo>> getGitHub1() async {
     final start = DateTime.now();
 
-    (_dio.transformer as DefaultTransformer).jsonDecodeCallback = parseJson;
+    (_dio.transformer as DefaultTransformer).jsonDecodeCallback =
+        parseJsonByLoop;
 
-    var response = await _dio.get(repos);
+    final response = await _dio.get(repos);
     final data = response.data as List;
-    List<GithubRepo> list = data.map((e) => GithubRepo.fromJson(e)).toList();
+    final List<GithubRepo> list =
+        data.map((e) => GithubRepo.fromJson(e)).toList();
 
     final used = DateTime.now().difference(start).inMilliseconds;
 
@@ -58,11 +60,13 @@ class HttpClient {
 
   Future<List<GithubRepo>> getGitHub2() async {
     final start = DateTime.now();
-    (_dio.transformer as DefaultTransformer).jsonDecodeCallback = null;
+    (_dio.transformer as DefaultTransformer).jsonDecodeCallback =
+        parseJsonByLoop;
 
-    var response = await _dio.get(repos);
+    final response = await _dio.get(repos);
     final data = response.data as List;
-    List<GithubRepo> list = data.map((e) => GithubRepo.fromJson(e)).toList();
+    final List<GithubRepo> list =
+        data.map((e) => GithubRepo.fromJson(e)).toList();
     final used = DateTime.now().difference(start).inMilliseconds;
 
     debugPrint("yao used main time=$used");
@@ -71,11 +75,12 @@ class HttpClient {
 
   Future<List<Githubuserbean>> getGitHubUser() async {
     final start = DateTime.now();
-    (_dio.transformer as DefaultTransformer).jsonDecodeCallback = null;
+    (_dio.transformer as DefaultTransformer).jsonDecodeCallback =
+        parseJsonByLoop;
     try {
-      var response = await _dio.get(users);
+      final response = await _dio.get(users);
       final data = response.data as List;
-      List<Githubuserbean> list =
+      final List<Githubuserbean> list =
           data.map((e) => Githubuserbean.fromMap(e)).toList();
       final used = DateTime.now().difference(start).inMilliseconds;
 
@@ -83,28 +88,29 @@ class HttpClient {
       return Future.value(list);
     } catch (e) {
       print(e);
-      return Future.value(null);
+      return null;
     }
   }
 
   Future<List<String>> getGitHubUserGrid() async {
     final start = DateTime.now();
-    (_dio.transformer as DefaultTransformer).jsonDecodeCallback = parseJson;
+    (_dio.transformer as DefaultTransformer).jsonDecodeCallback =
+        parseJsonByLoop;
     try {
-      var response = await _dio.get(users);
+      final response = await _dio.get(users);
       final data = response.data as List;
-      List<Githubuserbean> list =
+      final List<Githubuserbean> list =
           data.map((e) => Githubuserbean.fromMap(e)).toList();
       final used = DateTime.now().difference(start).inMilliseconds;
 
       debugPrint("yao used main time=$used");
 
-      List<String> res = list.map((e) => e.avatarUrl).toList();
+      final List<String> res = list.map((e) => e.avatarUrl).toList();
 
       return Future.value(res);
     } catch (e) {
       print(e);
-      return Future.value(null);
+      return null;
     }
   }
 }

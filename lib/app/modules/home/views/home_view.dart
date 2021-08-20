@@ -22,7 +22,7 @@ class HomeView extends GetView<HomeController> {
               children: [
                 InnerDrawer(
                   leftChild: LeftScreen(),
-                  rightChild: RightScreen(),
+                  rightChild: const RightScreen(),
                   scaffold: CenterScreen(),
                 ),
                 NewsPage(),
