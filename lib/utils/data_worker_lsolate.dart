@@ -31,8 +31,13 @@ class IsoWorkResult {
 Future<void> _isolateWorker(SendPort sendPort) async {
   final ReceivePort receivePort = ReceivePort();
   sendPort.send(receivePort.sendPort);
+
+  debugPrint("yao isolateWorker start...${Isolate.current.debugName}");
   receivePort.listen(
     (message) async {
+      debugPrint(
+          "yao _isolateWorker message type=${message.runtimeType}...${Isolate.current.debugName}");
+
       final int code = message.hashCode;
       if (message is String) {
         final dynamic json = jsonDecode(message);
@@ -62,6 +67,7 @@ Future<void> _isolateWorker(SendPort sendPort) async {
       }
     },
   );
+  debugPrint("yao isolateWorker end...${Isolate.current.debugName}");
 }
 
 class DataWorkerIsolate {
@@ -78,6 +84,7 @@ class DataWorkerIsolate {
 
   ///构造函数
   DataWorkerIsolate._internal() {
+    debugPrint("yao main iso DataWorkerIsolat create start");
     callback = <int, Completer<dynamic>>{};
     _createIsolate();
     _listen();
@@ -87,20 +94,27 @@ class DataWorkerIsolate {
     if (data == null) return Future.value();
     final Completer<dynamic> completer = Completer<dynamic>();
     callback[data.hashCode] = completer;
+
+    debugPrint("yao main iso parseJson...${Isolate.current.debugName}");
+
     _outgoingSendPort.send(data);
     return completer.future;
   }
 
   Future<void> _createIsolate() async {
     _incomingReceivePort = ReceivePort();
-    _isolate =
-        await Isolate.spawn(_isolateWorker, _incomingReceivePort.sendPort);
+    _isolate = await Isolate.spawn(
+        _isolateWorker, _incomingReceivePort.sendPort,
+        debugName: "json parser");
   }
 
   Future<void> _listen() async {
     _incomingReceivePort.listen((message) {
+      debugPrint(
+          "yao main message type=${message.runtimeType}...${Isolate.current.debugName}");
       if (message is SendPort) {
         _outgoingSendPort = message;
+        debugPrint("yao main iso DataWorkerIsolat create success");
       } else if (message is IsoWorkResult) {
         final int code = message.code;
         final dynamic result = message.result;

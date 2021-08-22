@@ -12,15 +12,15 @@ class LeftScreen extends StatelessWidget {
   testCompute() async {
     List<GithubRepo> test = await HttpClient().getGitHub1();
 
-    test.forEach((element) => print("yao e=$element"));
-    print(test);
+    //test.forEach((element) => print("yao e=$element"));
+    //print(test);
   }
 
   testMain() async {
     List<GithubRepo> test = await HttpClient().getGitHub2();
 
-    test.forEach((element) => print("yao e=$element"));
-    print(test);
+    //test.forEach((element) => print("yao e=$element"));
+    //print(test);
   }
 
   @override
@@ -63,8 +63,7 @@ class LeftScreen extends StatelessWidget {
                   ElevatedButton(
                     child: Text("test compute"),
                     onPressed: () {
-                      GuildController controller = Get.find();
-                      controller.reqGithubUserList();
+                      testCompute();
                     },
                   ),
                   ElevatedButton(
@@ -186,7 +185,7 @@ class LeftScreen extends StatelessWidget {
                   Row(
                     children: [
                       ElevatedButton(
-                        child: Text("JumpTo 1000"),
+                        child: const Text("JumpTo 1000"),
                         onPressed: () {
                           Event.eventBus.fire(InnerDrawerStatus(0));
                           Event.eventBus.fire(ListPositon(1, 1000));

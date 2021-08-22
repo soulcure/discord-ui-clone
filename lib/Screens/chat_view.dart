@@ -120,7 +120,7 @@ class _ScrollablePositionedListPageState
 
   /// Generate item number [i].
   Widget item(int i, Orientation orientation) {
-    debugPrint("yao build listview index=$i");
+    //debugPrint("yao build listview index=$i");
     return SizedBox(
       height: orientation == Orientation.portrait ? itemHeights[i] : null,
       width: orientation == Orientation.landscape ? itemHeights[i] : null,

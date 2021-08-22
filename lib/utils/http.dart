@@ -60,8 +60,7 @@ class HttpClient {
 
   Future<List<GithubRepo>> getGitHub2() async {
     final start = DateTime.now();
-    (_dio.transformer as DefaultTransformer).jsonDecodeCallback =
-        parseJsonByLoop;
+    (_dio.transformer as DefaultTransformer).jsonDecodeCallback = null;
 
     final response = await _dio.get(repos);
     final data = response.data as List;
