@@ -32,11 +32,11 @@ Future<void> _isolateWorker(SendPort sendPort) async {
   final ReceivePort receivePort = ReceivePort();
   sendPort.send(receivePort.sendPort);
 
-  debugPrint("yao isolateWorker start...${Isolate.current.debugName}");
+  debugPrint("yao isolateWorker start, iso name=${Isolate.current.debugName}");
   receivePort.listen(
     (message) async {
       debugPrint(
-          "yao _isolateWorker message type=${message.runtimeType}...${Isolate.current.debugName}");
+          "yao isolateWorker receive message type=${message.runtimeType}, iso name=${Isolate.current.debugName}");
 
       final int code = message.hashCode;
       if (message is String) {
@@ -67,7 +67,7 @@ Future<void> _isolateWorker(SendPort sendPort) async {
       }
     },
   );
-  debugPrint("yao isolateWorker end...${Isolate.current.debugName}");
+  debugPrint("yao isolateWorker end, iso name=${Isolate.current.debugName}");
 }
 
 class DataWorkerIsolate {
@@ -84,10 +84,11 @@ class DataWorkerIsolate {
 
   ///构造函数
   DataWorkerIsolate._internal() {
-    debugPrint("yao main iso DataWorkerIsolat create start");
+    debugPrint("yao main iso DataWorker isolate create start");
     callback = <int, Completer<dynamic>>{};
     _createIsolate();
     _listen();
+    debugPrint("yao main iso DataWorker isolate create finish");
   }
 
   Future<dynamic> parseJson(Object data) {
@@ -95,23 +96,24 @@ class DataWorkerIsolate {
     final Completer<dynamic> completer = Completer<dynamic>();
     callback[data.hashCode] = completer;
 
-    debugPrint("yao main iso parseJson...${Isolate.current.debugName}");
+    debugPrint("yao main iso parseJson, iso name=${Isolate.current.debugName}");
 
     _outgoingSendPort.send(data);
     return completer.future;
   }
 
   Future<void> _createIsolate() async {
+    debugPrint("yao main iso parseJson spawn start");
     _incomingReceivePort = ReceivePort();
     _isolate = await Isolate.spawn(
         _isolateWorker, _incomingReceivePort.sendPort,
-        debugName: "json parser");
+        debugName: "jsonParser");
   }
 
   Future<void> _listen() async {
     _incomingReceivePort.listen((message) {
       debugPrint(
-          "yao main message type=${message.runtimeType}...${Isolate.current.debugName}");
+          "yao main isolate receive message type=${message.runtimeType}");
       if (message is SendPort) {
         _outgoingSendPort = message;
         debugPrint("yao main iso DataWorkerIsolat create success");
@@ -123,6 +125,7 @@ class DataWorkerIsolate {
         if (completer != null && !completer.isCompleted) {
           completer.complete(result);
         }
+        callback.remove(code);
       }
     });
   }
