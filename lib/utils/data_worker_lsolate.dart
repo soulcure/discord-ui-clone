@@ -20,7 +20,11 @@ dynamic parseJsonByOnce(String text) {
 
 ///用于多次解析大json
 dynamic parseJsonByLoop(Object data) {
-  return DataWorkerIsolate.instance.parseJson(data);
+  if (DataWorkerIsolate.instance._outgoingSendPort != null) {
+    return DataWorkerIsolate.instance.parseJson(data);
+  } else {
+    return null;
+  }
 }
 
 class IsoWorkResult {
