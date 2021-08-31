@@ -1,7 +1,7 @@
 import 'package:discord_ui_clone/app/modules/contact/bindings/contact_binding.dart';
-import 'package:discord_ui_clone/app/modules/contact/views/contact_view.dart';
 import 'package:discord_ui_clone/app/modules/home/bindings/home_binding.dart';
 import 'package:discord_ui_clone/app/modules/home/views/home_view.dart';
+import 'package:discord_ui_clone/widgets/guild/views/basic_page.dart';
 import 'package:get/get.dart';
 
 part 'app_routes.dart';
@@ -20,7 +20,8 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CONTACT,
-      page: () => ContactView(),
+      //page: () => ContactView(),
+      page: () => BasicPage(),
       binding: ContactBinding(),
     ),
   ];
