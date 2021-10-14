@@ -19,16 +19,18 @@ class NavBarStatus {
   NavBarStatus(this.status);
 }
 
-class Event {
+typedef CallBack = void Function<T>(T event);
+
+class Event<T> {
   static final EventBus eventBus = EventBus();
 
-  static void fire(event) => eventBus.fire(event);
+  static void fire<T>(T event) => eventBus.fire(event);
 
-  static void listen<T>(func) {
+  static void listen<T>(CallBack func) {
     eventBus.on<T>().listen(func);
   }
 
-  static void listenAll(func) {
+  static void listenAll(CallBack func) {
     eventBus.on().listen(func);
   }
 }
