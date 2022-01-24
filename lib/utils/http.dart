@@ -44,7 +44,7 @@ class HttpClient {
     final start = DateTime.now();
 
     (_dio.transformer as DefaultTransformer).jsonDecodeCallback =
-        parseJsonByLoop;
+        parseJsonForHttp;
 
     final response = await _dio.get(repos);
     final data = response.data as List;
@@ -75,7 +75,7 @@ class HttpClient {
   Future<List<Githubuserbean>> getGitHubUser() async {
     final start = DateTime.now();
     (_dio.transformer as DefaultTransformer).jsonDecodeCallback =
-        parseJsonByLoop;
+        parseJsonForHttp;
     try {
       final response = await _dio.get(users);
       final data = response.data as List;
@@ -94,7 +94,7 @@ class HttpClient {
   Future<List<String>> getGitHubUserGrid() async {
     final start = DateTime.now();
     (_dio.transformer as DefaultTransformer).jsonDecodeCallback =
-        parseJsonByLoop;
+        parseJsonForHttp;
     try {
       final response = await _dio.get(users);
       final data = response.data as List;
