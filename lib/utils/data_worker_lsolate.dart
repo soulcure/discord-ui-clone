@@ -21,8 +21,8 @@ dynamic parseJsonByOnce(String text) {
 
 ///http用于多次解析大json
 dynamic parseJsonForHttp(String data) {
-  if (DataWorkerIsolate.instance._outgoingSendPort != null) {
-    return DataWorkerIsolate.instance.parseJson(data);
+  if (DataWorkerIsolate._instance.isFinish) {
+    return DataWorkerIsolate._instance.parseJson(data);
   } else {
     return null;
   }
@@ -30,7 +30,7 @@ dynamic parseJsonForHttp(String data) {
 
 ///webSocket用于多次解析大json
 dynamic parseJsonForWs(Object data) {
-  return DataWorkerIsolate.instance.parseJson(data);
+  return DataWorkerIsolate._instance.parseJson(data);
 }
 
 class IsoWorkResult {
@@ -73,23 +73,28 @@ Future<void> _isolateWorker(SendPort sendPort) async {
       }
     },
   );
+
+  debugPrint(
+      "jsonParser isolate = ${Isolate.current.debugName} isolateWorker finish");
 }
 
 class DataWorkerIsolate {
-  static final DataWorkerIsolate instance = DataWorkerIsolate._internal();
+  static final DataWorkerIsolate _instance = DataWorkerIsolate._internal();
+  final Map<int, Completer<dynamic>> _callback = <int, Completer<dynamic>>{};
 
   Isolate _isolate;
   ReceivePort _incomingReceivePort;
   SendPort _outgoingSendPort;
-  Map<int, Completer<dynamic>> callback;
+  bool _isFinish;
+
+  bool get isFinish => _isFinish == true;
 
   factory DataWorkerIsolate() {
-    return instance;
+    return _instance;
   }
 
   ///构造函数
   DataWorkerIsolate._internal() {
-    callback = <int, Completer<dynamic>>{};
     _createIsolate();
     _listen();
   }
@@ -105,7 +110,7 @@ class DataWorkerIsolate {
       code = data.hashCode.hashCode;
     }
 
-    callback[code] = completer;
+    _callback[code] = completer;
     _outgoingSendPort.send(data);
     return completer.future;
   }
@@ -121,15 +126,18 @@ class DataWorkerIsolate {
     _incomingReceivePort.listen((message) {
       if (message is SendPort) {
         _outgoingSendPort = message;
+        _isFinish = true;
+        debugPrint(
+            "jsonParser isolate = ${Isolate.current.debugName} is finish");
       } else if (message is IsoWorkResult) {
         final int code = message.code;
         final dynamic result = message.result;
-        final Completer<dynamic> completer = callback[code];
+        final Completer<dynamic> completer = _callback[code];
 
         if (completer != null && !completer.isCompleted) {
           completer.complete(result);
         }
-        callback.remove(code);
+        _callback.remove(code);
       }
     });
   }
